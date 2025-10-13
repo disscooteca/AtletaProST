@@ -176,10 +176,10 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
         'Família': 'Família',
         'Categoria': 'Categoria',
         'Localização': 'Localização',
-        'Tamanho': 'Tamanho',
+        'Tamanho': 'T',
         'Unidade': 'Unidade',
-        'Quantidade Atual': 'Quantidade',
-        'Inventário': 'Inventário'
+        'Quantidade Atual': 'Quan',
+        'Inventário': 'I'
     })
     
     # Configurar PDF em landscape
@@ -188,7 +188,7 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     
     # LARGURAS PERSONALIZADAS PARA CADA COLUNA
     larguras_personalizadas = {
-        'Código': 10,      
+        'Cod': 10,      
         'Nome': 40,         
         'Família': 30, 
         'T': 10, 
