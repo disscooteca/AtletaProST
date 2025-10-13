@@ -200,7 +200,7 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     }
     
     # Ordem das colunas (a mesma do DataFrame)
-    colunas_ordenadas = ['Código', 'Nome', 'Família', 'Categoria', 'T', 'Localização', 'Unidade', 
+    colunas_ordenadas = ['Cod', 'Nome', 'Família', 'Categoria', 'T', 'Localização', 'Unidade', 
                          'Quan', 'I']
     
     # Verificar se a soma das larguras cabe na página
