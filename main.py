@@ -189,14 +189,14 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     # LARGURAS PERSONALIZADAS PARA CADA COLUNA
     larguras_personalizadas = {
         'Cod': 10,      
-        'Nome': 38,         
+        'Nome': 40,         
         'Família': 30, 
         'T': 10, 
         'Categoria': 30,     
         'Loc': 20,   
-        'Unidade': 32,
-        'Quan': 10,  
-        'I': 10
+        'Unidade': 35,
+        'Quan': 13,  
+        'I': 13
     }
     
     # Ordem das colunas (a mesma do DataFrame)
@@ -205,7 +205,7 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     
     # Verificar se a soma das larguras cabe na página
     largura_pagina = 280  # A4 landscape width
-    margens = 20
+    margens = 10
     largura_util = largura_pagina - (2 * margens)
     largura_total = sum(larguras_personalizadas.values())
     
