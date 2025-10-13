@@ -511,20 +511,20 @@ if selected == "Painel de Controle":
     #df_producao = gerar_dados_producao() 
     
     
-    familia = dados["Categoria/Família"].unique().tolist()   
-    unique_families = dados["Categoria/Família"].unique()
+    familia = dados["Família"].unique().tolist()   
+    unique_families = dados["Família"].unique()
     color_palette = px.colors.qualitative.Dark2
     family_colors = {family: color_palette[i % len(color_palette)] 
                     for i, family in enumerate(unique_families)}
 
     for f in familia:
-        db = dados[dados["Categoria/Família"] == f]
+        db = dados[dados["Família"] == f]
         st.subheader(f"Gráfico da família de produtos {f}:")
         
         fig = px.bar(db, 
                     y='Nome', 
                     x="Quantidade Atual", 
-                    color="Categoria/Família",
+                    color="Família",
                     color_discrete_map=family_colors,
                     title=f'Quantidade de produtos - Família {f}', 
                     orientation='h',
@@ -533,7 +533,7 @@ if selected == "Painel de Controle":
                         'Nome': True,
                         'Quantidade Atual': ':.0f',
                         'Estoque de Segurança': ':.0f',  # Adiciona estoque de segurança no hover
-                        'Categoria/Família': False
+                        'Família': False
                     })
         
         # Personalização do layout
@@ -599,10 +599,10 @@ elif selected == "Controle de Inventário":
 
     st.write('- - -')
 
-    opcoes = dados["Categoria/Família"].unique().tolist()
+    opcoes = dados["Categoria"].unique().tolist()
     escolha = st.selectbox("Escolha uma família de produtos", opcoes)
     
-    categoria = dados[dados["Categoria/Família"] == escolha]
+    categoria = dados[dados["Categoria"] == escolha]
 
     # Obter lista de nomes
     nomes = categoria['Nome'].tolist()
@@ -643,10 +643,10 @@ elif selected == "Apontamento":
 
     st.write('- - -')
 
-    opcoes = dados["Categoria/Família"].unique().tolist()
+    opcoes = dados["Categoria"].unique().tolist()
     escolha = st.selectbox("Escolha uma família de produtos", opcoes)
     
-    categoria = dados[dados["Categoria/Família"] == escolha]
+    categoria = dados[dados["Categoria"] == escolha]
 
     # Obter lista de nomes
     nomes = categoria['Nome'].tolist()
@@ -724,7 +724,7 @@ elif selected == "Cadastro de Produtos":
 
             nomeProduto = st.text_input("Informe o nome do insumo", max_chars= 50)
 
-            categoriaProduto = st.selectbox("Selecione a categoria do insumo dos tipos já registrados ou ESCREVA UMA NOVA", dados["Categoria/Família"].unique(), accept_new_options=True)
+            categoriaProduto = st.selectbox("Selecione a categoria do insumo dos tipos já registrados ou ESCREVA UMA NOVA", dados["Categoria"].unique(), accept_new_options=True)
 
             fornecedorProduto = st.text_input("Informe o fornecedor do insumo", max_chars= 50)
 
@@ -777,7 +777,7 @@ elif selected == "Cadastro de Produtos":
 
             nomeProduto = st.text_input("Informe o nome do semiacabado", max_chars= 50)
 
-            categoriaProduto = st.selectbox("Selecione a categoria do semiacabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Categoria/Família"].unique(), accept_new_options=True)
+            categoriaProduto = st.selectbox("Selecione a categoria do semiacabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Categoria"].unique(), accept_new_options=True)
 
             fornecedorProduto = " - "
 
@@ -835,10 +835,10 @@ elif selected == "Ordem de Compra":
 
     insumoPO = dados[dados["Estoque de Segurança"] != " - "]
 
-    opcoesPO = insumoPO["Categoria/Família"].unique().tolist()
+    opcoesPO = insumoPO["Categoria"].unique().tolist()
     escolhaPO = st.selectbox("Escolha uma família de produtos", opcoesPO)
     
-    categoriaPO = insumoPO[insumoPO["Categoria/Família"] == escolhaPO]
+    categoriaPO = insumoPO[insumoPO["Categoria"] == escolhaPO]
 
     # Obter lista de nomes
     nomesPO = categoriaPO['Nome'].tolist()
@@ -886,10 +886,10 @@ elif selected == "Edição de Informações":
 
     st.write("- - -")
 
-    opcoesEdicao = dados["Categoria/Família"].unique().tolist()
+    opcoesEdicao = dados["Categoria"].unique().tolist()
     escolhaEdicao = st.selectbox("Escolha uma família de produtos", opcoesEdicao)
     
-    categoriaEdicao = dados[dados["Categoria/Família"] == escolhaEdicao]
+    categoriaEdicao = dados[dados["Categoria"] == escolhaEdicao]
 
     # Obter lista de nomes
     nomesEdicao = categoriaEdicao['Nome'].tolist()
@@ -908,7 +908,7 @@ elif selected == "Edição de Informações":
 
         nomeProdutoEdicao = st.text_input("Informe o nome do produto", max_chars= 50, value=linha_produtoEdicao["Nome"].iloc[0])
 
-        categoriaProdutoEdicao = st.text_input("Edite a categoria/família do produto", max_chars= 50, value=linha_produtoEdicao["Categoria/Família"].iloc[0])
+        categoriaProdutoEdicao = st.text_input("Edite a categoria do produto", max_chars= 50, value=linha_produtoEdicao["Categoria"].iloc[0])
 
         fornecedorProdutoEdicao = st.text_input("Informe o fornecedor do produto", max_chars= 50, value=linha_produtoEdicao["Fornecedor Principal"].iloc[0])
 
