@@ -188,13 +188,13 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     
     # LARGURAS PERSONALIZADAS PARA CADA COLUNA
     larguras_personalizadas = {
-        'Código': 15,      
-        'Nome': 45,         
+        'Código': 10,      
+        'Nome': 40,         
         'Família': 30, 
-        'Tamanho': 20, 
-        'Categoria': 10,     
-        'Localização': 25,   
-        'Unidade': 35,
+        'Tamanho': 10, 
+        'Categoria': 30,     
+        'Localização': 20,   
+        'Unidade': 30,
         'Quantidade': 10,  
         'Inventário': 10
     }
