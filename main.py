@@ -171,7 +171,7 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     dadospdf["Inventário"] = ""
 
     dadospdf = dadospdf.rename(columns={
-        'Código': 'Código', 
+        'Código': 'Cod', 
         'Nome': 'Nome', 
         'Família': 'Família',
         'Categoria': 'Categoria',
@@ -191,12 +191,12 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
         'Código': 10,      
         'Nome': 40,         
         'Família': 30, 
-        'Tamanho': 10, 
+        'T': 10, 
         'Categoria': 30,     
         'Localização': 20,   
         'Unidade': 30,
-        'Quantidade': 10,  
-        'Inventário': 10
+        'Quan': 10,  
+        'I': 10
     }
     
     # Ordem das colunas (a mesma do DataFrame)
