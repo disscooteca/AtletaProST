@@ -5,10 +5,14 @@ import gspread
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from googleapiclient.discovery import build
+import tempfile
+from googleapiclient.http import MediaFileUpload
 from fpdf import FPDF
 from fpdf.enums import Align
 import os
 from datetime import date
+import json
 
 #biblioecas para mandar mensagens
 #import smtplib
@@ -37,10 +41,64 @@ scopes = [
     "https://www.googleapis.com/auth/drive",
 ]
 
-creds = ServiceAccountCredentials.from_json_keyfile_name(
-    filename= filename,
-    scopes= scopes
-)
+if 'gcp_service_account_json' not in st.secrets:
+    st.error("JSON da service account não encontrado nos secrets!")
+    st.stop()
+
+else:
+    service_account_json = st.secrets["gcp_service_account_json"]
+    service_account_info = json.loads(service_account_json)
+    
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+        keyfile_dict=service_account_info,
+        scopes=scopes
+    )
+
+drive_service = build('drive', 'v3', credentials=creds)
+
+def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_id):
+    """Salva PDF em Shared Drive (solução recomendada)"""
+    try:
+        # Salvar temporariamente
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
+            pdf.output(temp_file.name)
+            temp_path = temp_file.name
+        
+        # Metadados
+        file_metadata = {
+            'name': nome_arquivo,
+            'parents': [pasta_id]
+        }
+        
+        # Upload com suporte a Shared Drives
+        media = MediaFileUpload(temp_path, mimetype='application/pdf', resumable=True)
+        
+        file = drive_service.files().create(
+            body=file_metadata,
+            media_body=media,
+            supportsAllDrives=True,  # ← CRÍTICO
+            fields='id, name, webViewLink, webContentLink'
+        ).execute()
+        
+        # Limpeza
+        os.unlink(temp_path)
+        
+        st.success(f"✅ OS salva com sucesso!")
+        st.write(f"**Arquivo:** {file['name']}")
+        
+        if file.get('webViewLink'):
+            st.markdown(f"**🔗 [Abrir no Drive]({file['webViewLink']})**")
+        
+        return file
+        
+    except Exception as e:
+        st.error(f"❌ Erro ao salvar: {e}")
+        # Debug adicional
+        st.write("⚠️ Certifique-se que:")
+        st.write("- O Shared Drive existe")
+        st.write("- A Service Account tem acesso como 'Editor'")
+        st.write("- Você está usando o ID correto do Shared Drive")
+        return None
 
 client = gspread.authorize(creds)
 
@@ -264,16 +322,19 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
             pdf.ln()
     
     # Salvar arquivo
-    pasta_base = os.path.dirname(__file__)
-    caminho_pasta = os.path.join(pasta_base, "ESTOQUE")
-    
-    # Criar pasta se não existir
-    os.makedirs(caminho_pasta, exist_ok=True)
-    
-    caminho_completo = os.path.join(caminho_pasta, nome_arquivo)
-    pdf.output(caminho_completo)
-    st.toast(f"✅ pdf com inventário emitido. local do arquivo: {caminho_completo}")
-    return caminho_completo
+
+    arquivo_salvo = salvar_pdf_no_drive(
+                        pdf=pdf,
+                        nome_arquivo="estoque_pdf",
+                        pasta_id=st.secrets["id_estoque"]
+                    )
+    if arquivo_salvo:
+        st.success("PDF salvo com sucesso no Google Drive!")
+        st.write(f"**Nome:** {arquivo_salvo['name']}")
+        if arquivo_salvo.get('webViewLink'):
+            st.write(f"**Link:** {arquivo_salvo['webViewLink']}")
+
+    return None
 
 status()
 
