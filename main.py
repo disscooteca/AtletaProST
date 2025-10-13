@@ -83,7 +83,7 @@ def salvar_pdf_no_drive(pdf, nome_arquivo, pasta_id):
         # Limpeza
         os.unlink(temp_path)
         
-        st.success(f"✅ OS salva com sucesso!")
+        st.success(f"✅ PDF ESTOQUE salva com sucesso!")
         st.write(f"**Arquivo:** {file['name']}")
         
         if file.get('webViewLink'):
@@ -175,7 +175,7 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
         'Nome': 'Nome', 
         'Família': 'Família',
         'Categoria': 'Categoria',
-        'Localização': 'Localização',
+        'Localização': 'Loc',
         'Tamanho': 'T',
         'Unidade': 'Unidade',
         'Quantidade Atual': 'Quan',
@@ -189,18 +189,18 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     # LARGURAS PERSONALIZADAS PARA CADA COLUNA
     larguras_personalizadas = {
         'Cod': 10,      
-        'Nome': 40,         
+        'Nome': 38,         
         'Família': 30, 
         'T': 10, 
         'Categoria': 30,     
-        'Localização': 20,   
-        'Unidade': 30,
+        'Loc': 20,   
+        'Unidade': 32,
         'Quan': 10,  
         'I': 10
     }
     
     # Ordem das colunas (a mesma do DataFrame)
-    colunas_ordenadas = ['Cod', 'Nome', 'Família', 'Categoria', 'T', 'Localização', 'Unidade', 
+    colunas_ordenadas = ['Cod', 'Nome', 'Família', 'Categoria', 'T', 'Loc', 'Unidade', 
                          'Quan', 'I']
     
     # Verificar se a soma das larguras cabe na página
