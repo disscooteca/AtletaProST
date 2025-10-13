@@ -131,83 +131,30 @@ def status():
                     if statusStatus[0] != "Atenção":                   
                         indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                         linhaStatus = indiceStatus[0] + 2
-                        planilhaEstoque.update_cell(row=int(linhaStatus), col=11, value="Atenção")
+                        planilhaEstoque.update_cell(row=int(linhaStatus), col=13, value="Atenção")
                 else:
                     if statusStatus[0] != " - ":
                         indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                         linhaStatus = indiceStatus[0] + 2
-                        planilhaEstoque.update_cell(row=int(linhaStatus), col=11, value=" - ")
+                        planilhaEstoque.update_cell(row=int(linhaStatus), col=13, value=" - ")
                     
             except (ValueError, TypeError):
                 # Se não conseguir converter, trata como erro
                 if statusStatus[0] != "NA":
                     indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                     linhaStatus = indiceStatus[0] + 2
-                    planilhaEstoque.update_cell(row=int(linhaStatus), col=11, value="NA")
+                    planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value="NA")
 
         if esStatus[0] != " - " and statusStatus[0] != "PO Aberta" and ordemdeCompraStatus[0] != " - ": #Se n for semiacabado e n tiver PO registrada e n houver numero em PO
             indiceStatus = dados.index[dados['Código'] == produtos].tolist()
             linhaStatus = indiceStatus[0] + 2
-            planilhaEstoque.update_cell(row=int(linhaStatus), col=11, value="PO Aberta")
+            planilhaEstoque.update_cell(row=int(linhaStatus), col=13, value="PO Aberta")
 
         if esStatus[0] == " - " and statusStatus[0] != "NA":
             indiceStatus = dados.index[dados['Código'] == produtos].tolist()
             linhaStatus = indiceStatus[0] + 2
-            planilhaEstoque.update_cell(row=int(linhaStatus), col=11, value="NA")
+            planilhaEstoque.update_cell(row=int(linhaStatus), col=13, value="NA")
 
-# def mandar_email():
-#     # Configurações
-#     remetente = "atletaproestoque@gmail.com" 
-#     senha = "atletaproestoque123"
-#     destinatario = "carvasamdal@gmail.com"
-
-#     numero = "*55 62 86195339"
-
-#     mensagem= "oi oi automático"
-    
-#     driver = webdriver.Chrome()
-    
-#     try:
-#         # Abrir WhatsApp Web
-#         url = f"https://web.whatsapp.com/"
-#         driver.get(url)
-        
-#         time.sleep(15)
-#         while len(driver.find_elements_by_id("side")) < 1:
-#             time.sleep(1)
-#         # Enviar mensagem pressionando ENTER
-#         texto = urllib.parse.quote(mensagem)
-#         link = f"https://web.whatsapp.com/send?phone={numero}&text={texto}"
-#         driver.get(link)
-
-#         while len(driver.find_elements_by_id("side")) < 1:
-#             time.sleep(1)
-
-#         driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div/div[3]/div/p').send_keys(Keys.ENTER)
-#         time.sleep(10)
-        
-#         print("✅ Mensagem enviada com sucesso!")
-        
-#     except Exception as e:
-#         print(f"❌ Erro: {e}")
-#     finally:
-#         driver.quit()
-#         # # Usar SSL na porta 465
-#         # context = ssl.create_default_context()
-        
-#         # with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context, timeout=30) as servidor:
-#         #     print("✅ Conectado via SSL")
-#         #     servidor.login(remetente, senha)
-#         #     print("✅ Login realizado")
-            
-#         #     mensagem = f"Subject: Teste Python SSL\n\nEmail enviado via SSL!"
-#         #     servidor.sendmail(remetente, destinatario, mensagem)
-            
-#         # print("✅ Email enviado com sucesso!")
-        
-#     # except Exception as e:
-#     #     print(f"❌ Erro: {e}")
-    
 def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.pdf", max_linhas_por_pagina=35):
     """
     Gera um PDF com tabela que quebra automaticamente em múltiplas páginas
@@ -219,15 +166,17 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     - max_linhas_por_pagina: Número máximo de linhas por página
     """
 
-    dadospdf = dados[["Código", "Nome", "Categoria/Família", "Localização", "Unidade", "Quantidade Atual"]]
+    dadospdf = dados[["Código", "Nome", "Família", "Categoria", "Tamanho", "Localização", "Unidade", "Quantidade Atual"]]
 
     dadospdf["Inventário"] = ""
 
     dadospdf = dadospdf.rename(columns={
         'Código': 'Código', 
         'Nome': 'Nome', 
-        'Categoria/Família': 'Família',
+        'Família': 'Família',
+        'Categoria': 'Categoria',
         'Localização': 'Localização',
+        'Tamanho': 'Tamanho',
         'Unidade': 'Unidade',
         'Quantidade Atual': 'Quantidade',
         'Inventário': 'Inventário'
@@ -241,15 +190,17 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     larguras_personalizadas = {
         'Código': 15,      
         'Nome': 45,         
-        'Família': 30,       
+        'Família': 30, 
+        'Tamanho': 20, 
+        'Categoria': 10,     
         'Localização': 25,   
-        'Unidade': 35,      
-        'Quantidade': 20,  
-        'Inventário': 20
+        'Unidade': 35,
+        'Quantidade': 10,  
+        'Inventário': 10
     }
     
     # Ordem das colunas (a mesma do DataFrame)
-    colunas_ordenadas = ['Código', 'Nome', 'Família', 'Localização', 'Unidade', 
+    colunas_ordenadas = ['Código', 'Nome', 'Família', 'Categoria', 'Tamanho', 'Localização', 'Unidade', 
                          'Quantidade', 'Inventário']
     
     # Verificar se a soma das larguras cabe na página
@@ -677,7 +628,7 @@ elif selected == "Controle de Inventário":
             
             # Só executa quando o botão for clicado
             if submitted:
-                planilhaEstoque.update_cell(row=int(linha),col=8,value=str(quantidade))    
+                planilhaEstoque.update_cell(row=int(linha),col=10,value=str(quantidade))    
                 status()
                 st.rerun()
                 st.toast("Quantidade atualizada!")
@@ -725,7 +676,8 @@ elif selected == "Apontamento":
             
             # Só executa quando o botão for clicado
             if submitted:
-                planilhaEstoque.update_cell(row=int(linha),col=8,value=int(quantidade))
+                planilhaEstoque.update_cell(row=int(linha),col=10,value=int(quantidade))
+                st.toast(f"Entrada de {produto_selecionado} registrada")
                 status()
                 st.rerun()
 
@@ -741,8 +693,9 @@ elif selected == "Apontamento":
                 
                 # Só executa quando o botão for clicado
                 if submitted:
-                    planilhaEstoque.update_cell(row=int(linha),col=8,value=int(quantidade)) 
-                    status()   
+                    planilhaEstoque.update_cell(row=int(linha),col=10,value=int(quantidade)) 
+                    status()
+                    st.toast(f"Saída de {produto_selecionado} registrada")
                     st.rerun()
 
         else:
@@ -920,9 +873,9 @@ elif selected == "Ordem de Compra":
 
         if submitted:
 
-            planilhaEstoque.update_cell(row=int(linhaPO), col=11, value="PO Aberta")
-            planilhaEstoque.update_cell(row=int(linhaPO), col=12, value=quantidadeProdutoPO)
-            planilhaEstoque.update_cell(row=int(linhaPO), col=13, value=previsaoPO)
+            planilhaEstoque.update_cell(row=int(linhaPO), col=13, value="PO Aberta")
+            planilhaEstoque.update_cell(row=int(linhaPO), col=14, value=quantidadeProdutoPO)
+            planilhaEstoque.update_cell(row=int(linhaPO), col=15, value=previsaoPO)
 
             st.toast("Ordem de Compra registrada!", icon="🎉")
 
