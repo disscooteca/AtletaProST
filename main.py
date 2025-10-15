@@ -521,19 +521,23 @@ if selected == "Painel de Controle":
         db = dados[dados["Família"] == f]
         st.subheader(f"Gráfico da família de produtos {f}:")
         
-        db['Status'] = db.apply(lambda row: 'Abaixo do Estoque' if row['Quantidade Atual'] < row['Estoque de Segurança'] else 'Acima do Estoque', axis=1)
+        db['StatusE'] = db.apply(lambda row: 
+            'Abaixo do Estoque' if row['Quantidade Atual'] < row['Estoque de Segurança'] 
+            else 'Acima do Estoque' if row['Estoque de Segurança'] == "-" 
+            else 'Outro', axis=1)
 
-        # SEGUNDO: Definir as cores para cada status
+        # Definir as cores para cada status
         status_colors = {
             'Abaixo do Estoque': 'red', 
-            'Acima do Estoque': 'green'
+            'Acima do Estoque': 'green',
+            'Outro': 'gray'  # Adicionei uma cor para o caso "Outro"
         }
 
         # TERCEIRO: Modificar o gráfico para usar a coluna Status e o novo color_discrete_map
         fig = px.bar(db, 
                             y='Nome', 
                             x="Quantidade Atual", 
-                            color="Status",  # MUDEI: Agora usa a coluna Status em vez de Família
+                            color="StatusE",  # MUDEI: Agora usa a coluna Status em vez de Família
                             color_discrete_map=status_colors,  # MUDEI: Usa o mapeamento de status
                             title=f'Quantidade de produtos - Família {f}', 
                             orientation='h',
@@ -542,7 +546,7 @@ if selected == "Painel de Controle":
                                 'Nome': True,
                                 'Quantidade Atual': ':.0f',
                                 'Estoque de Segurança': ':.0f',
-                                'Status': False,  # Adicionei Status mas escondo do hover
+                                'StatusE': False,  # Adicionei Status mas escondo do hover
                                 'Família': True   # MUDEI: Mantive Família visível no hover para referência
                             })
                 
