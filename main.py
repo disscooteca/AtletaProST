@@ -521,36 +521,40 @@ if selected == "Painel de Controle":
         db = dados[dados["Família"] == f]
         st.subheader(f"Gráfico da família de produtos {f}:")
         
+        # Primeiro, converter estoque de segurança para numérico onde possível
+        db['Estoque_Seguranca_Num'] = pd.to_numeric(db['Estoque de Segurança'], errors='coerce')
+        
         db['StatusE'] = db.apply(lambda row: 
-            'Abaixo do Estoque' if row['Quantidade Atual'] < row['Estoque de Segurança'] 
-            else 'Acima do Estoque' if row['Estoque de Segurança'] != "-" 
+            'Abaixo do Estoque' if (pd.notna(row['Estoque_Seguranca_Num']) and 
+                                row['Quantidade Atual'] < row['Estoque_Seguranca_Num']) 
+            else 'Acima do Estoque' if pd.notna(row['Estoque_Seguranca_Num'])
             else 'Outro', axis=1)
 
         # Definir as cores para cada status
         status_colors = {
             'Abaixo do Estoque': 'red', 
             'Acima do Estoque': 'green',
-            'Outro': 'gray'  # Adicionei uma cor para o caso "Outro"
+            'Outro': 'gray'
         }
 
-        # TERCEIRO: Modificar o gráfico para usar a coluna Status e o novo color_discrete_map
+        # Criar o gráfico
         fig = px.bar(db, 
                             y='Nome', 
                             x="Quantidade Atual", 
-                            color="StatusE",  # MUDEI: Agora usa a coluna Status em vez de Família
-                            color_discrete_map=status_colors,  # MUDEI: Usa o mapeamento de status
+                            color="StatusE",
+                            color_discrete_map=status_colors,
                             title=f'Quantidade de produtos - Família {f}', 
                             orientation='h',
                             text='Quantidade Atual',
                             hover_data={
                                 'Nome': True,
                                 'Quantidade Atual': ':.0f',
-                                'Estoque de Segurança': ':.0f',
-                                'StatusE': False,  # Adicionei Status mas escondo do hover
-                                'Família': True   # MUDEI: Mantive Família visível no hover para referência
+                                'Estoque de Segurança': True,  # Mantém o formato original
+                                'StatusE': False,
+                                'Família': True
                             })
                 
-        # Personalização do layout (mantido igual)
+        # Personalização do layout
         fig.update_layout(
             title={
                 'text': f"Quantidade de produtos - Família {f}",
@@ -571,7 +575,7 @@ if selected == "Painel de Controle":
                 y=1.02,
                 xanchor="right",
                 x=1,
-                title_text='Status do Estoque:'  # MUDEI: Título mais descritivo
+                title_text='Status do Estoque:'
             ),
             margin=dict(l=150, r=50, t=100, b=50),
             uniformtext_minsize=10,
@@ -580,31 +584,34 @@ if selected == "Painel de Controle":
             paper_bgcolor='rgba(0,0,0,0)'
         )
 
-        # Personalização do hover (atualizado para incluir Família)
+        # Personalização do hover
         fig.update_traces(
             texttemplate='%{text:.0f}',
             textposition='outside',
             hovertemplate='<b>%{y}</b><br>' +
                         'Quantidade Atual: %{x:.0f}<br>' +
-                        'Estoque Segurança: %{customdata[0]:.0f}<br>' +
-                        'Família: %{customdata[1]}<br>' +  # MUDEI: Adicionei Família no hover
+                        'Estoque Segurança: %{customdata[0]}<br>' +  # Mantém string original
+                        'Família: %{customdata[1]}<br>' +
                         '<extra></extra>'
         )
 
-        # Adicionar linhas verticais para o Estoque de Segurança (mantido igual)
-        fig.add_trace(go.Scatter(
-            y=db['Nome'],
-            x=db['Estoque de Segurança'],
-            name='Estoque de Segurança',
-            mode='markers',
-            marker=dict(
-                color='lightgray',
-                size=10,
-                symbol='line-ns-open',
-                line=dict(width=2, color='red')
-            ),
-            hoverinfo='x'
-        ))
+        # Adicionar linhas verticais APENAS para produtos com estoque numérico
+        db_com_estoque = db[pd.notna(db['Estoque_Seguranca_Num'])]
+        if not db_com_estoque.empty:
+            fig.add_trace(go.Scatter(
+                y=db_com_estoque['Nome'],
+                x=db_com_estoque['Estoque_Seguranca_Num'],
+                name='Estoque de Segurança',
+                mode='markers',
+                marker=dict(
+                    color='lightgray',
+                    size=10,
+                    symbol='line-ns-open',
+                    line=dict(width=2, color='red')
+                ),
+                hoverinfo='y+x',
+                hovertemplate='<b>%{y}</b><br>Estoque Segurança: %{x:.0f}<extra></extra>'
+            ))
 
         st.plotly_chart(fig, use_container_width=True)
         st.divider()
