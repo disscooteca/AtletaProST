@@ -1010,7 +1010,7 @@ elif selected == "Ordem de Compra":
     with st.form("abrirPO"):
         st.write(f"Quantidade atual: {linha_produtoPO['Quantidade Atual'].iloc[0]}")
         observacoesRegistrada = linha_produtoPO['Observação'].values[0]
-        st.write(f"Quantidade atual: {observacoesRegistrada}")
+        st.write(f"Observações: {observacoesRegistrada}")
 
         if linha_produtoPO['Status'].iloc[0] == "Atenção":
             st.warning("Quantidade atual registrada menor que Estoque de segurança")
