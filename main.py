@@ -133,16 +133,15 @@ def status():
         #st.write(esStatus[0] != " - ", (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "))
         if esStatus[0] != " - " and (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "):
             try:
-                st.write(quantidadeStatus[0] < esStatus[0], statusStatus[0] != "Atenção")
                 
-                if quantidadeStatus[0] < esStatus[0] and statusStatus[0] != "Atenção":
-                    indiceStatus = dados.index[dados['Código'] == produtos].tolist()
-                    linhaStatus = int(indiceStatus[0]) + 2
-                    st.write(linhaStatus)
-                    planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
-  
-                    if statusStatus[0] != " - ":
-                        planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value=" - ")
+                if quantidadeStatus[0] < esStatus[0]:
+                    if statusStatus[0] != "Atenção":
+                        indiceStatus = dados.index[dados['Código'] == produtos].tolist()
+                        linhaStatus = int(indiceStatus[0]) + 2
+                        planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
+    
+                        if statusStatus[0] != " - ":
+                            planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value=" - ")
                     
                 else:
                     indiceStatus = dados.index[dados['Código'] == produtos].tolist()
