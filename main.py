@@ -703,7 +703,7 @@ if selected == "Painel de Controle":
                 hovertemplate='<b>%{y}</b><br>Estoque Segurança: %{x:.0f}<extra></extra>'
             ))
 
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
         st.divider()
     
 elif selected == "Controle de Inventário":
