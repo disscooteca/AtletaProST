@@ -549,7 +549,7 @@ if selected == "Painel de Controle":
             'Outro': '#868E96'               # Cinza azulado
         }
 
-        # Criar o gráfico
+        st.write(db_grupo['StatusE'])
         if db_grupo['StatusE'] == "Outro":
             fig = px.bar(db_grupo, 
                                 y='Label_Y', 
