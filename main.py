@@ -144,7 +144,12 @@ def status():
                     planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="NA")
                     planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value="NA")
 
-        if esStatus[0] != " - " and statusStatus[0] != "PO Aberta" and ordemdeCompraStatus[0] != " - " and ordemdeCompraStatus[0] != "NA" and ordemdeCompraStatus[0] != "": #Se n for semiacabado e n tiver PO registrada e n houver numero em PO
+        if (esStatus and statusStatus and ordemdeCompraStatus and 
+                esStatus[0] != " - " and 
+                statusStatus[0] != "PO Aberta" and 
+                ordemdeCompraStatus[0] != " - " and 
+                ordemdeCompraStatus[0] != "NA" and 
+                ordemdeCompraStatus[0] != ""): #Se n for semiacabado e n tiver PO registrada e n houver numero em PO
             indiceStatus = dados.index[dados['Código'] == produtos].tolist()
             linhaStatus = indiceStatus[0] + 2
             planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="PO Aberta")
@@ -153,6 +158,7 @@ def status():
             indiceStatus = dados.index[dados['Código'] == produtos].tolist()
             linhaStatus = indiceStatus[0] + 2
             planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="NA")
+            planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value="NA")
 
 def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.pdf", max_linhas_por_pagina=35):
     """
