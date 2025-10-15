@@ -983,10 +983,10 @@ elif selected == "Ordem de Compra":
 
     insumoPO = dados[dados["Estoque de Segurança"] != " - "]
 
-    opcoesPO = insumoPO["Familia"].unique().tolist()
+    opcoesPO = insumoPO["Família"].unique().tolist()
     escolhaPO = st.selectbox("Escolha uma família de produtos", opcoesPO)
     
-    familiaPO = insumoPO[insumoPO["Familia"] == escolhaPO]
+    familiaPO = insumoPO[insumoPO["Família"] == escolhaPO]
 
     # Obter lista de nomes
     nomesPO = familiaPO['Nome'].tolist()
