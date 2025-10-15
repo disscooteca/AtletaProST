@@ -555,7 +555,7 @@ if selected == "Painel de Controle":
                                 y='Label_Y', 
                                 x="Quantidade Atual", 
                                 color="Tamanho",
-                                color_discrete_sequence=px.colors.qualitative.G10,
+                                color_discrete_sequence=px.colors.qualitative.Dark2,
                                 title=f'Família {f} - Categoria {categoria}', 
                                 orientation='h',
                                 text='Quantidade Atual',
