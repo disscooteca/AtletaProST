@@ -712,7 +712,6 @@ elif selected == "Controle de Inventário":
     
     familia = dados[dados["Família"] == escolha]
 
-    # Obter lista de nomes
     categorias = familia['Categoria'].unique().tolist()
     
     categoria = st.selectbox("Escolha uma categoria de produto:", categorias)
@@ -720,12 +719,18 @@ elif selected == "Controle de Inventário":
     # Encontrar a linha correspondente ao produto selecionado
     categoria = familia[familia['Categoria'] == categoria]
 
-    nomes = categoria['Nome'].unique().tolist()
+    tamanhos = categoria['Tamanho'].unique().tolist()
+    
+    tamanho = st.selectbox("Escolha o tamanho:", tamanhos)
+
+    tamanho = categoria[categoria['Tamanho'] == tamanho]
+
+    nomes = tamanho['Nome'].tolist()
     
     produto_selecionado = st.radio("ESCOLHA UM PRODUTO:", nomes)
     
     # Encontrar a linha correspondente ao produto selecionado
-    linha_produto = categoria[categoria['Nome'] == produto_selecionado]
+    linha_produto = tamanho[tamanho['Nome'] == produto_selecionado]
 
     if not linha_produto.empty:
         quantidadeRegistrada = linha_produto['Quantidade Atual'].values[0] 
