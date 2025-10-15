@@ -532,9 +532,9 @@ if selected == "Painel de Controle":
 
         # Definir as cores para cada status
         status_colors = {
-            'Abaixo do Estoque': 'red', 
-            'Acima do Estoque': 'green',
-            'Outro': 'gray'
+            'Abaixo do Estoque': '#FF6B6B',  # Vermelho suave
+            'Acima do Estoque': '#51CF66',   # Verde esmeralda
+            'Outro': '#868E96'               # Cinza azulado
         }
 
         # Criar o gráfico
