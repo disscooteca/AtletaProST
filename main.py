@@ -521,13 +521,20 @@ if selected == "Painel de Controle":
         db = dados[dados["Família"] == f]
         st.subheader(f"Gráfico da família de produtos {f}:")
         
-        status_colors = {'vermelho': 'red', 'verde': 'green'}
+        db['Status'] = db.apply(lambda row: 'Abaixo do Estoque' if row['Quantidade Atual'] < row['Estoque de Segurança'] else 'Acima do Estoque', axis=1)
 
+        # SEGUNDO: Definir as cores para cada status
+        status_colors = {
+            'Abaixo do Estoque': 'red', 
+            'Acima do Estoque': 'green'
+        }
+
+        # TERCEIRO: Modificar o gráfico para usar a coluna Status e o novo color_discrete_map
         fig = px.bar(db, 
                             y='Nome', 
                             x="Quantidade Atual", 
-                            color="cor_status",  # Usar a coluna de status para cor
-                            color_discrete_map=status_colors,  # Mapeamento das cores
+                            color="Status",  # MUDEI: Agora usa a coluna Status em vez de Família
+                            color_discrete_map=status_colors,  # MUDEI: Usa o mapeamento de status
                             title=f'Quantidade de produtos - Família {f}', 
                             orientation='h',
                             text='Quantidade Atual',
@@ -535,11 +542,11 @@ if selected == "Painel de Controle":
                                 'Nome': True,
                                 'Quantidade Atual': ':.0f',
                                 'Estoque de Segurança': ':.0f',
-                                'Família': True,  # Mantive a família no hover para referência
-                                'cor_status': False  # Remove a coluna de cor do hover
+                                'Status': False,  # Adicionei Status mas escondo do hover
+                                'Família': True   # MUDEI: Mantive Família visível no hover para referência
                             })
-
-        # Personalização do layout
+                
+        # Personalização do layout (mantido igual)
         fig.update_layout(
             title={
                 'text': f"Quantidade de produtos - Família {f}",
@@ -560,7 +567,7 @@ if selected == "Painel de Controle":
                 y=1.02,
                 xanchor="right",
                 x=1,
-                title_text='Status:'
+                title_text='Status do Estoque:'  # MUDEI: Título mais descritivo
             ),
             margin=dict(l=150, r=50, t=100, b=50),
             uniformtext_minsize=10,
@@ -569,18 +576,18 @@ if selected == "Painel de Controle":
             paper_bgcolor='rgba(0,0,0,0)'
         )
 
-        # Personalização do hover
+        # Personalização do hover (atualizado para incluir Família)
         fig.update_traces(
             texttemplate='%{text:.0f}',
             textposition='outside',
             hovertemplate='<b>%{y}</b><br>' +
                         'Quantidade Atual: %{x:.0f}<br>' +
                         'Estoque Segurança: %{customdata[0]:.0f}<br>' +
-                        'Família: %{customdata[1]}<br>' +
+                        'Família: %{customdata[1]}<br>' +  # MUDEI: Adicionei Família no hover
                         '<extra></extra>'
         )
 
-        # Adicionar linhas verticais para o Estoque de Segurança de cada produto
+        # Adicionar linhas verticais para o Estoque de Segurança (mantido igual)
         fig.add_trace(go.Scatter(
             y=db['Nome'],
             x=db['Estoque de Segurança'],
@@ -594,9 +601,6 @@ if selected == "Painel de Controle":
             ),
             hoverinfo='x'
         ))
-
-        # Atualizar a legenda para mostrar os status de forma mais clara
-        fig.for_each_trace(lambda trace: trace.update(name='Abaixo do Estoque' if trace.name == 'vermelho' else 'Acima do Estoque'))
 
         st.plotly_chart(fig, use_container_width=True)
         st.divider()
