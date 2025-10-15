@@ -765,25 +765,37 @@ elif selected == "Apontamento":
 
     st.write('- - -')
 
-    opcoes = dados["Categoria"].unique().tolist()
+    opcoes = dados["Família"].unique().tolist()
     escolha = st.selectbox("Escolha uma família de produtos", opcoes)
     
-    categoria = dados[dados["Categoria"] == escolha]
+    familia = dados[dados["Família"] == escolha]
 
-    # Obter lista de nomes
-    nomes = categoria['Nome'].tolist()
+    categorias = familia['Categoria'].unique().tolist()
+    
+    categoria = st.selectbox("Escolha uma categoria de produto:", categorias)
+    
+    # Encontrar a linha correspondente ao produto selecionado
+    categoria = familia[familia['Categoria'] == categoria]
+
+    tamanhos = categoria['Tamanho'].unique().tolist()
+    
+    tamanho = st.selectbox("Escolha o tamanho:", tamanhos)
+
+    tamanho = categoria[categoria['Tamanho'] == tamanho]
+
+    nomes = tamanho['Nome'].tolist()
     
     produto_selecionado = st.radio("ESCOLHA UM PRODUTO:", nomes)
     
     # Encontrar a linha correspondente ao produto selecionado
-    linha_produto = categoria[categoria['Nome'] == produto_selecionado]
+    linha_produto = tamanho[tamanho['Nome'] == produto_selecionado]
 
     if not linha_produto.empty:
         quantidadeRegistrada = linha_produto['Quantidade Atual'].values[0]
         localRegistrado = linha_produto['Localização'].values[0] 
         unidadeRegistrada = linha_produto['Unidade'].values[0] 
-        indice = dados.index[dados['Nome'] == produto_selecionado].tolist()
-        linha = indice[0] + 2
+        indice = dados.index[dados['Código'] == linha_produto['Código'].iloc[0]].tolist()
+        linha = indice[0] + 2 if indice else st.write("Problema")
 
         st.write(f"Localização: {localRegistrado}")
         st.write(f"Última quantidade registrada: {quantidadeRegistrada}")
