@@ -130,10 +130,11 @@ def status():
             continue
             
         # Primeira condição: Se não for semiacabado e PO vazia
-        st.write(esStatus[0] != " - ", (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "))
+        #st.write(esStatus[0] != " - ", (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "))
         if esStatus[0] != " - " and (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "):
             try:
                 st.write(quantidadeStatus[0] < esStatus[0], statusStatus[0] != "Atenção")
+                st.write(indiceStatus[0])
                 if quantidadeStatus[0] < esStatus[0] and statusStatus[0] != "Atenção":
                     indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                     linhaStatus = indiceStatus[0] + 2
