@@ -1049,11 +1049,11 @@ elif selected == "Edição de Informações":
     # Encontrar a linha correspondente ao produto selecionado
     categoriaEdicao = familiaEdicao[familiaEdicao['Categoria'] == categoria]
 
-    tamanhos = categoria['Tamanho'].unique().tolist()
+    tamanhos = categoriaEdicao['Tamanho'].unique().tolist()
     
     tamanho = st.selectbox("Escolha o tamanho:", tamanhos)
 
-    tamanho = categoria[categoria['Tamanho'] == tamanho]
+    tamanho = categoriaEdicao[categoriaEdicao['Tamanho'] == tamanho]
 
     nomes = tamanho['Nome'].tolist()
     
