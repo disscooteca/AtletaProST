@@ -517,7 +517,6 @@ if selected == "Painel de Controle":
     family_colors = {family: color_palette[i % len(color_palette)] 
                     for i, family in enumerate(unique_families)}
 
-    # Primeiro, vamos agrupar por Família e Categoria
     grupos = dados.groupby(['Família', 'Categoria'])
 
     for (f, categoria), db_grupo in grupos:
@@ -542,18 +541,39 @@ if selected == "Painel de Controle":
             else 'Acima do Estoque' if pd.notna(row['Estoque_Seguranca_Num'])
             else 'Outro', axis=1)
 
-        # Definir as cores para cada status
+        # Criar uma coluna combinada para cores dos produtos "Outro"
+        db_grupo['Cor_Outro'] = db_grupo.apply(lambda row: 
+            row['Nome'] if row['StatusE'] == 'Outro' else row['StatusE'], axis=1)
+
+        # Definir as cores - paleta expandida sem vermelho e verde
         status_colors = {
             'Abaixo do Estoque': '#FF6B6B',  # Vermelho suave
             'Acima do Estoque': '#51CF66',   # Verde esmeralda
-            'Outro': '#868E96'               # Cinza azulado
         }
+        
+        # Adicionar cores para cada produto "Outro" individualmente
+        produtos_outro = db_grupo[db_grupo['StatusE'] == 'Outro']['Nome'].unique()
+        cores_outro = [
+            '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', 
+            '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#aec7e8', '#ffbb78',
+            '#98df8a', '#ff9896', '#c5b0d5', '#c49c94', '#f7b6d2', '#c7c7c7',
+            '#dbdb8d', '#9edae5', '#393b79', '#637939', '#8c6d31', '#843c39',
+            '#7b4173', '#5254a3', '#6b6ecf', '#9c9ede', '#31a354', '#b5cf6b'
+        ]
+        
+        # Mapear cada produto "Outro" para uma cor única
+        for i, produto in enumerate(produtos_outro):
+            if i < len(cores_outro):
+                status_colors[produto] = cores_outro[i]
+            else:
+                # Se houver mais produtos que cores, repetir a paleta
+                status_colors[produto] = cores_outro[i % len(cores_outro)]
 
-        # Criar o gráfico
+        # Criar o gráfico usando a coluna Cor_Outro para colorir
         fig = px.bar(db_grupo, 
                             y='Label_Y', 
                             x="Quantidade Atual", 
-                            color="StatusE",
+                            color="Cor_Outro",  # Usar a coluna combinada
                             color_discrete_map=status_colors,
                             title=f'Família {f} - Categoria {categoria}', 
                             orientation='h',
@@ -563,10 +583,11 @@ if selected == "Painel de Controle":
                                 'Tamanho': True if 'Tamanho' in db_grupo.columns else False,
                                 'Quantidade Atual': ':.0f',
                                 'Estoque de Segurança': True,
-                                'StatusE': False,
+                                'StatusE': True,  # Mostrar status no hover
                                 'Família': False,
                                 'Categoria': False,
-                                'Label_Y': False
+                                'Label_Y': False,
+                                'Cor_Outro': False
                             })
                 
         # Personalização do layout
@@ -581,7 +602,7 @@ if selected == "Painel de Controle":
             },
             xaxis_title='Quantidade',
             yaxis_title='Produto (Tamanho)' if 'Tamanho' in db_grupo.columns else 'Produto',
-            height=max(400, len(db_grupo) * 30),  # Altura dinâmica baseada no número de produtos
+            height=max(400, len(db_grupo) * 30),
             hovermode='y unified',
             showlegend=True,
             legend=dict(
@@ -590,9 +611,9 @@ if selected == "Painel de Controle":
                 y=1.02,
                 xanchor="right",
                 x=1,
-                title_text='Status do Estoque:'
+                title_text='Legenda:'
             ),
-            margin=dict(l=200, r=50, t=100, b=50),  # Aumentei margem esquerda para labels maiores
+            margin=dict(l=200, r=50, t=100, b=50),
             uniformtext_minsize=10,
             uniformtext_mode='hide',
             plot_bgcolor='rgba(0,0,0,0)',
@@ -605,6 +626,7 @@ if selected == "Painel de Controle":
             hovertemplate += 'Tamanho: %{customdata[1]}<br>'
         hovertemplate += 'Quantidade Atual: %{x:.0f}<br>' + \
                         'Estoque Segurança: %{customdata[2 if "Tamanho" in db_grupo.columns else 1]}<br>' + \
+                        'Status: %{customdata[3 if "Tamanho" in db_grupo.columns else 2]}<br>' + \
                         '<extra></extra>'
 
         fig.update_traces(
