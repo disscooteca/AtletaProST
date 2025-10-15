@@ -1005,6 +1005,9 @@ elif selected == "Ordem de Compra":
 
         st.write(f"Quantidade atual: {linha_produtoPO['Quantidade Atual'].iloc[0]}")
 
+        if linha_produtoPO['Status'].iloc[0] == "Atenção":
+            st.warning("Quantidade atual registrada menor que Estoque de segurança")
+
         if ordemPO[0] != " - ":
             st.error("Produto já possui ordem de compra em aberto!")
             st.warning("Em caso de nova PO, informe na quantidade a soma de todos os pedidos em aberto!")
