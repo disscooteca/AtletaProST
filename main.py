@@ -145,14 +145,15 @@ def status():
                             planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value=" - ")
                     
                 else:
-                    if statusStatus[0] != " - " or statusStatus[0] != "Atenção":
-                        st.write(statusStatus[0])
-                        indiceStatus = dados.index[dados['Código'] == produtos].tolist()
-                        linhaStatus = int(indiceStatus[0]) + 2
-                        planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
-  
-                        if statusStatus[0] != " - ":
-                            planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value=" - ")
+                    if statusStatus[0] != " - ":
+                        if statusStatus[0] != "Atenção":
+                            st.write(statusStatus[0])
+                            indiceStatus = dados.index[dados['Código'] == produtos].tolist()
+                            linhaStatus = int(indiceStatus[0]) + 2
+                            planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
+    
+                            if statusStatus[0] != " - ":
+                                planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value=" - ")
 
 
             except (ValueError, TypeError, IndexError):
