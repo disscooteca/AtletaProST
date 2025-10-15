@@ -549,8 +549,8 @@ if selected == "Painel de Controle":
             'Outro': '#868E96'               # Cinza azulado
         }
 
-        st.write(db_grupo['StatusE'][0])
-        if db_grupo['StatusE'][0] == "Outro":
+        st.write(db_grupo['StatusE'].iloc[0])
+        if db_grupo['StatusE'].iloc[0] == "Outro":
             fig = px.bar(db_grupo, 
                                 y='Label_Y', 
                                 x="Quantidade Atual", 
