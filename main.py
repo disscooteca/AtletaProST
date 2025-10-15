@@ -513,7 +513,7 @@ if selected == "Painel de Controle":
                     st.markdown(f"Comprado: {comproaberto[i]}.\n")
                     st.markdown(f"Previsão de chegada: {previsaoPO[i]}.\n")
                     if st.button(f"Fechar Ordem de Compra", key=f"btn_{codigoaberto[i]}"):
-                        indicePO = dados.index[dados['Nome'] == p].tolist()
+                        indicePO = dados.index[dados['Código'] == codigoaberto].tolist()
                         linhaPO = indicePO[0] + 2
                         planilhaEstoque.batch_update([{
                             'range': f'K{linhaPO}:L{linhaPO}',  # Colunas A até J (1 a 10)
@@ -1019,8 +1019,8 @@ elif selected == "Ordem de Compra":
 
         submitted = st.form_submit_button("Abrir PO")
 
-        indicePO = dados.index[dados['Nome'] == produto_selecionadoPO].tolist()
-        linhaPO = indicePO[0] + 2
+        indice = dados.index[dados['Código'] == linha_produtoPO['Código'].iloc[0]].tolist()
+        linhaPO = indice[0] + 2 if indice else st.write("Problema")
 
         if submitted:
 
@@ -1037,23 +1037,36 @@ elif selected == "Edição de Informações":
 
     st.write("- - -")
 
-    opcoesEdicao = dados["Categoria"].unique().tolist()
+    opcoesEdicao = dados["Família"].unique().tolist()
     escolhaEdicao = st.selectbox("Escolha uma família de produtos", opcoesEdicao)
     
-    categoriaEdicao = dados[dados["Categoria"] == escolhaEdicao]
+    familiaEdicao = dados[dados["Família"] == escolhaEdicao]
 
-    # Obter lista de nomes
-    nomesEdicao = categoriaEdicao['Nome'].tolist()
+    categorias = familiaEdicao['Categoria'].unique().tolist()
     
-    produto_selecionadoEdicao = st.selectbox("ESCOLHA UM PRODUTO:", nomesEdicao)
+    categoria = st.selectbox("Escolha uma categoria de produto:", categorias)
+    
+    # Encontrar a linha correspondente ao produto selecionado
+    categoriaEdicao = familiaEdicao[familiaEdicao['Categoria'] == categoria]
+
+    tamanhos = categoria['Tamanho'].unique().tolist()
+    
+    tamanho = st.selectbox("Escolha o tamanho:", tamanhos)
+
+    tamanho = categoria[categoria['Tamanho'] == tamanho]
+
+    nomes = tamanho['Nome'].tolist()
+    
+    produto_selecionadoEdicao = st.radio("ESCOLHA UM PRODUTO:", nomes)
+    
+    # Encontrar a linha correspondente ao produto selecionado
+    linha_produtoEdicao = tamanho[tamanho['Nome'] == produto_selecionadoEdicao]
 
     st.write("- - -")
 
     st.header("Edite as informações:")
 
     with st.form("editeInfo"):
-
-        linha_produtoEdicao = categoriaEdicao[categoriaEdicao['Nome'] == produto_selecionadoEdicao]
 
         codigoProdutoEdicao = st.text_input("Informe o novo código do produto", max_chars= 50, value=linha_produtoEdicao["Código"].iloc[0])
 
@@ -1078,9 +1091,8 @@ elif selected == "Edição de Informações":
         submitted = st.form_submit_button("Editar")
 
         if submitted:
-            indiceEdicao = dados.index[dados['Nome'] == produto_selecionadoEdicao].tolist()
-            linhaEdicao = indiceEdicao[0] + 2
-
+            indiceEdicao = dados.index[dados['Código'] == linha_produtoEdicao['Código'].iloc[0]].tolist()
+            linhaEdicao = indiceEdicao[0] + 2 if indiceEdicao else st.write("Problema")
 
             # Criar a lista de valores para a linha inteira
             valores_linha = [
