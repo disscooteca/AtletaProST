@@ -805,7 +805,7 @@ elif selected == "Apontamento":
         st.write(f"Localização: {localRegistrado}")
         st.write(f"Última quantidade registrada: {quantidadeRegistrada}")
         st.write(f"Unidade registrada: {unidadeRegistrada}")
-        st.write(f"Observacoes: {observacoesRegistrada}")
+        st.write(f"Observações: {observacoesRegistrada}")
         
         quantidade = st.number_input(f"Quantidade de {produto_selecionado} em movimento ({InputOutput}):", step=1)
 
