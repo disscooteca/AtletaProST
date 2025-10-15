@@ -123,18 +123,18 @@ def status():
         ordemdeCompraStatus = linha_status["PO"].unique().tolist()
         statusStatus = linha_status["Status"].unique().tolist()
         
-        if esStatus[0] != " - " and esStatus[0] != "NA" and esStatus[0] != "PO Aberta" and esStatus[0] != "Atenção": #Ou seja, se n for semiacabado e se PO tiver vazia
+        if esStatus[0] != " - " and (ordemdeCompraStatus[0] == " - " or ordemdeCompraStatus[0] == ""): #Ou seja, se n for semiacabado e se PO tiver vazia
             try:
                 if quantidadeStatus < esStatus:
-                    if statusStatus[0] != "Atenção":                   
-                        indiceStatus = dados.index[dados['Código'] == produtos].tolist()
-                        linhaStatus = indiceStatus[0] + 2
-                        planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
-                else:
+                                   
+                    indiceStatus = dados.index[dados['Código'] == produtos].tolist()
+                    linhaStatus = indiceStatus[0] + 2
+                    planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
+  
                     if statusStatus[0] != " - ":
                         indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                         linhaStatus = indiceStatus[0] + 2
-                        planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value=" - ")
+                        planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value=" - ")
                     
             except (ValueError, TypeError):
                 # Se não conseguir converter, trata como erro
@@ -142,8 +142,9 @@ def status():
                     indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                     linhaStatus = indiceStatus[0] + 2
                     planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="NA")
+                    planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value="NA")
 
-        if esStatus[0] != " - " and statusStatus[0] != "PO Aberta" and ordemdeCompraStatus[0] != " - ": #Se n for semiacabado e n tiver PO registrada e n houver numero em PO
+        if esStatus[0] != " - " and statusStatus[0] != "PO Aberta" and ordemdeCompraStatus[0] != " - " and ordemdeCompraStatus[0] != "NA" and ordemdeCompraStatus[0] != "": #Se n for semiacabado e n tiver PO registrada e n houver numero em PO
             indiceStatus = dados.index[dados['Código'] == produtos].tolist()
             linhaStatus = indiceStatus[0] + 2
             planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="PO Aberta")
