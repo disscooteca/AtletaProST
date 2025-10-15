@@ -552,7 +552,7 @@ if selected == "Painel de Controle":
         }
         
         # Adicionar cores para cada produto "Outro" individualmente
-        produtos_outro = db_grupo[db_grupo['StatusE'] == 'Outro']['Tamanho'].unique()
+        produtos_outro = db_grupo[db_grupo['StatusE'] == 'Outro']['Nome']['Tamanho']
         cores_outro = [
             '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', 
             '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#aec7e8', '#ffbb78',
