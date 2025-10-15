@@ -523,7 +523,7 @@ if selected == "Painel de Controle":
         
         db['StatusE'] = db.apply(lambda row: 
             'Abaixo do Estoque' if row['Quantidade Atual'] < row['Estoque de Segurança'] 
-            else 'Acima do Estoque' if row['Estoque de Segurança'] == "-" 
+            else 'Acima do Estoque' if row['Estoque de Segurança'] != "-" 
             else 'Outro', axis=1)
 
         # Definir as cores para cada status
