@@ -117,6 +117,7 @@ dados = pd.DataFrame(dados_estoque)
 def status():
     for produtos in dados["Código"]:
         linha_status = dados[dados['Código'] == produtos]
+        st.write(f"Produto: {produtos}, ES: {esStatus[0]}, PO: {ordemdeCompraStatus[0]}, Status: {statusStatus[0]}")
 
         quantidadeStatus = linha_status["Quantidade Atual"].unique().tolist()
         esStatus = linha_status["Estoque de Segurança"].unique().tolist()
