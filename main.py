@@ -125,35 +125,33 @@ def status():
         
         if esStatus[0] != " - " and ordemdeCompraStatus[0] == " - ": #Ou seja, se n for semiacabado e se PO tiver vazia
             try:
-                
-                # Agora pode comparar com segurança
                 if quantidadeStatus < esStatus:
                     if statusStatus[0] != "Atenção":                   
                         indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                         linhaStatus = indiceStatus[0] + 2
-                        planilhaEstoque.update_cell(row=int(linhaStatus), col=13, value="Atenção")
+                        planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
                 else:
                     if statusStatus[0] != " - ":
                         indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                         linhaStatus = indiceStatus[0] + 2
-                        planilhaEstoque.update_cell(row=int(linhaStatus), col=13, value=" - ")
+                        planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value=" - ")
                     
             except (ValueError, TypeError):
                 # Se não conseguir converter, trata como erro
                 if statusStatus[0] != "NA":
                     indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                     linhaStatus = indiceStatus[0] + 2
-                    planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value="NA")
+                    planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="NA")
 
         if esStatus[0] != " - " and statusStatus[0] != "PO Aberta" and ordemdeCompraStatus[0] != " - ": #Se n for semiacabado e n tiver PO registrada e n houver numero em PO
             indiceStatus = dados.index[dados['Código'] == produtos].tolist()
             linhaStatus = indiceStatus[0] + 2
-            planilhaEstoque.update_cell(row=int(linhaStatus), col=13, value="PO Aberta")
+            planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="PO Aberta")
 
         if esStatus[0] == " - " and statusStatus[0] != "NA":
             indiceStatus = dados.index[dados['Código'] == produtos].tolist()
             linhaStatus = indiceStatus[0] + 2
-            planilhaEstoque.update_cell(row=int(linhaStatus), col=13, value="NA")
+            planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="NA")
 
 def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.pdf", max_linhas_por_pagina=35):
     """
@@ -976,9 +974,9 @@ elif selected == "Ordem de Compra":
 
         if submitted:
 
-            planilhaEstoque.update_cell(row=int(linhaPO), col=13, value="PO Aberta")
-            planilhaEstoque.update_cell(row=int(linhaPO), col=14, value=quantidadeProdutoPO)
-            planilhaEstoque.update_cell(row=int(linhaPO), col=15, value=previsaoPO)
+            planilhaEstoque.update_cell(row=int(linhaPO), col=14, value="PO Aberta")
+            planilhaEstoque.update_cell(row=int(linhaPO), col=15, value=quantidadeProdutoPO)
+            planilhaEstoque.update_cell(row=int(linhaPO), col=16, value=previsaoPO)
 
             st.toast("Ordem de Compra registrada!", icon="🎉")
 
