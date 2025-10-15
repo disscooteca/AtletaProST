@@ -737,7 +737,8 @@ elif selected == "Controle de Inventário":
     if not linha_produto.empty:
         quantidadeRegistrada = linha_produto['Quantidade Atual'].values[0] 
         unidadeRegistrada = linha_produto['Unidade'].values[0] 
-        indice = dados.index[dados['Código'] == linha_produto['Código']].tolist()
+        cod = linha_produto['Código']
+        indice = dados.index[dados['Código'] == cod].tolist()
         linha = indice[0] + 2
 
         st.write(f"Última quantidade registrada: {quantidadeRegistrada}")
