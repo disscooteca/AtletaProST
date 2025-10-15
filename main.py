@@ -569,6 +569,8 @@ if selected == "Painel de Controle":
                 # Se houver mais produtos que cores, repetir a paleta
                 status_colors[produto] = cores_outro[i % len(cores_outro)]
 
+        st.write(status_colors)
+
         # Criar o gráfico usando a coluna Cor_Outro para colorir
         fig = px.bar(db_grupo, 
                             y='Label_Y', 
