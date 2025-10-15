@@ -517,7 +517,7 @@ if selected == "Painel de Controle":
                     st.markdown(f"Previsão de chegada: {previsaoPO[i]}.\n")
                     st.markdown(f"Observações: {observacaoPO[i]}.\n")
                     if st.button(f"Fechar Ordem de Compra", key=f"btn_{codigoaberto[i]}"):
-                        indicePO = dados.index[dados['Código'] == codigoaberto].tolist()
+                        indicePO = dados.index[dados['Código'] == codigoaberto[i]].tolist()
                         linhaPO = indicePO[0] + 2
                         planilhaEstoque.batch_update([{
                             'range': f'N{linhaPO}:P{linhaPO}',  # Colunas A até J (1 a 10)
