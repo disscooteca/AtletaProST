@@ -555,7 +555,7 @@ if selected == "Painel de Controle":
                                 y='Label_Y', 
                                 x="Quantidade Atual", 
                                 color="Tamanho",
-                                color_discrete_sequence=px.colors.qualitative.Dark2,
+                                color_discrete_sequence=px.colors.qualitative.Prism,
                                 title=f'Família {f} - Categoria {categoria}', 
                                 orientation='h',
                                 text='Quantidade Atual',
@@ -813,7 +813,7 @@ elif selected == "Cadastro de Produtos":
 
             nomeProduto = st.text_input("Informe o nome do insumo", max_chars= 50)
 
-            categoriaProduto = st.selectbox("Selecione a categoria do insumo dos tipos já registrados ou ESCREVA UMA NOVA", dados["Categoria"].unique(), accept_new_options=True)
+            familiaProduto = st.selectbox("Selecione a família do insumo dos tipos já registrados ou ESCREVA UMA NOVA", dados["Família"].unique(), accept_new_options=True)
 
             fornecedorProduto = st.text_input("Informe o fornecedor do insumo", max_chars= 50)
 
@@ -828,6 +828,8 @@ elif selected == "Cadastro de Produtos":
             esProduto = st.number_input("Informe a quantidade de estoque de segurança para o insumo na unidade registrada", step=1)
 
             loteminimoProduto = st.number_input("Informe o lote mínimo em unidades registradas", step=1)
+
+            observacaoProduto = st.text_input("Observações:", max_chars= 70)
             
             # Botão de submit dentro do form
             submitted = st.form_submit_button("Submeter")
@@ -838,19 +840,22 @@ elif selected == "Cadastro de Produtos":
                 valores_linha = [
                     codigoProduto,
                     nomeProduto,
-                    categoriaProduto,
+                    familiaProduto,
+                    "-",
+                    "-",
                     fornecedorProduto,
                     contatoFornecedor,
                     localizacaoEstoque,
                     unidadeProduto,
                     quantidadeProduto,  # Convertendo para int como no exemplo original
                     esProduto,
-                    loteminimoProduto
+                    loteminimoProduto,
+                    observacaoProduto
                 ]
 
                 # Fazer o batch update
                 planilhaEstoque.batch_update([{
-                    'range': f'A{ultima_linha}:J{ultima_linha}',  # Colunas A até J (1 a 10)
+                    'range': f'A{ultima_linha}:M{ultima_linha}',  # Colunas A até J (1 a 10)
                     'values': [valores_linha]
                 }])
                 
@@ -866,7 +871,11 @@ elif selected == "Cadastro de Produtos":
 
             nomeProduto = st.text_input("Informe o nome do semiacabado", max_chars= 50)
 
+            familiaProduto = st.selectbox("Selecione a família do semiacabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Família"].unique(), accept_new_options=True)
+
             categoriaProduto = st.selectbox("Selecione a categoria do semiacabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Categoria"].unique(), accept_new_options=True)
+
+            tamanhoProduto = st.selectbox("Selecione o tamanho do semiacabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Tamanho"].unique(), accept_new_options=True)
 
             fornecedorProduto = " - "
 
@@ -882,6 +891,8 @@ elif selected == "Cadastro de Produtos":
 
             loteminimoProduto = " - "
 
+            observacaoProduto = st.text_input("Observações:", max_chars= 70)
+
             statusProduto = "NA"
 
             po = "NA"
@@ -895,7 +906,9 @@ elif selected == "Cadastro de Produtos":
                 valores_linha = [
                     codigoProduto,
                     nomeProduto,
+                    familiaProduto,
                     categoriaProduto,
+                    tamanhoProduto,
                     fornecedorProduto,
                     contatoFornecedor,
                     localizacaoEstoque,
@@ -903,13 +916,14 @@ elif selected == "Cadastro de Produtos":
                     quantidadeProduto,  # Convertendo para int como no exemplo original
                     esProduto,
                     loteminimoProduto,
+                    observacaoProduto,
                     statusProduto,
                     po
                 ]
 
                 # Fazer o batch update
                 planilhaEstoque.batch_update([{
-                    'range': f'A{ultima_linha}:L{ultima_linha}',  # Colunas A até J (1 a 10)
+                    'range': f'A{ultima_linha}:O{ultima_linha}',  # Colunas A até J (1 a 10)
                     'values': [valores_linha]
                 }])
 
