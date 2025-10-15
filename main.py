@@ -123,7 +123,7 @@ def status():
         ordemdeCompraStatus = linha_status["PO"].unique().tolist()
         statusStatus = linha_status["Status"].unique().tolist()
         
-        if esStatus[0] != " - " and ordemdeCompraStatus[0] == " - " or esStatus[0] != " - " and ordemdeCompraStatus[0] == "": #Ou seja, se n for semiacabado e se PO tiver vazia
+        if esStatus[0] != " - " and esStatus[0] != "NA" and esStatus[0] != "PO Aberta" and esStatus[0] != "Atenção": #Ou seja, se n for semiacabado e se PO tiver vazia
             try:
                 if quantidadeStatus < esStatus:
                     if statusStatus[0] != "Atenção":                   
