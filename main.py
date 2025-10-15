@@ -550,29 +550,78 @@ if selected == "Painel de Controle":
         }
 
         # Criar o gráfico
-        fig = px.bar(db_grupo, 
-                            y='Label_Y', 
-                            x="Quantidade Atual", 
-                            color="StatusE",
-                            color_discrete_map=status_colors,
-                            title=f'Família {f} - Categoria {categoria}', 
-                            orientation='h',
-                            text='Quantidade Atual',
-                            hover_data={
-                                'Nome': True,
-                                'Tamanho': True if 'Tamanho' in db_grupo.columns else False,
-                                'Quantidade Atual': ':.0f',
-                                'Estoque de Segurança': True,
-                                'StatusE': False,
-                                'Família': False,
-                                'Categoria': False,
-                                'Label_Y': False
-                            })
+        if db_grupo['StatusE'] == "Outro":
+            fig = px.bar(db_grupo, 
+                                y='Label_Y', 
+                                x="Quantidade Atual", 
+                                color="Tamanho",
+                                color_discrete_sequence=px.colors.qualitative.G10,
+                                title=f'Família {f} - Categoria {categoria}', 
+                                orientation='h',
+                                text='Quantidade Atual',
+                                hover_data={
+                                    'Nome': True,
+                                    'Tamanho': True if 'Tamanho' in db_grupo.columns else False,
+                                    'Quantidade Atual': ':.0f',
+                                    'Estoque de Segurança': True,
+                                    'StatusE': False,
+                                    'Família': False,
+                                    'Categoria': False,
+                                    'Label_Y': False
+                                })
+                
+            # Personalização do layout
+            fig.update_layout(
+                title={
+                    'text': f"Família {f} - Categoria {categoria}",
+                    'y': 0.95,
+                    'x': 0.5,
+                    'xanchor': 'center',
+                    'yanchor': 'top',
+                    'font': {'size': 20}
+                },
+                xaxis_title='Quantidade',
+                yaxis_title='Produto (Tamanho)' if 'Tamanho' in db_grupo.columns else 'Produto',
+                height=max(400, len(db_grupo) * 30),  # Altura dinâmica baseada no número de produtos
+                hovermode='y unified',
+                showlegend=True,
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.02,
+                    xanchor="right",
+                    x=1,
+                    title_text='Status do Estoque:'
+                ),
+                margin=dict(l=200, r=50, t=100, b=50),  # Aumentei margem esquerda para labels maiores
+                uniformtext_minsize=10,
+                uniformtext_mode='hide',
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)'
+            )
+
+        else:
+            fig = px.bar(db_grupo, 
+                                y='Label_Y', 
+                                x="Quantidade Atual", 
+                                color="StatusE",
+                                color_discrete_map=status_colors,
+                                title=f'Família {f}', 
+                                orientation='h',
+                                text='Quantidade Atual',
+                                hover_data={
+                                    'Nome': True,
+                                    'Quantidade Atual': ':.0f',
+                                    'Estoque de Segurança': True,
+                                    'StatusE': False,
+                                    'Categoria': False,
+                                    'Label_Y': False
+                                })
                 
         # Personalização do layout
         fig.update_layout(
             title={
-                'text': f"Família {f} - Categoria {categoria}",
+                'text': f"Família {f}",
                 'y': 0.95,
                 'x': 0.5,
                 'xanchor': 'center',
