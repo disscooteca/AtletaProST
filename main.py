@@ -520,7 +520,7 @@ if selected == "Painel de Controle":
                         indicePO = dados.index[dados['Código'] == codigoaberto].tolist()
                         linhaPO = indicePO[0] + 2
                         planilhaEstoque.batch_update([{
-                            'range': f'K{linhaPO}:L{linhaPO}',  # Colunas A até J (1 a 10)
+                            'range': f'N{linhaPO}:O{linhaPO}',  # Colunas A até J (1 a 10)
                             'values': [[" - ", " - "]]
                         }])  
                         st.toast("Lembre-se de fazer o Apontamento do produto pedido nessa Ordem de Compra")
