@@ -145,6 +145,8 @@ def status():
                         planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value=" - ")
                     
                 else:
+                    indiceStatus = dados.index[dados['Código'] == produtos].tolist()
+                    linhaStatus = int(indiceStatus[0]) + 2
                     if statusStatus[0] != " - " or statusStatus[0] != "Atenção":
                         planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
   
