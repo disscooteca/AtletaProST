@@ -732,10 +732,12 @@ elif selected == "Controle de Inventário":
     # Encontrar a linha correspondente ao produto selecionado
     linha_produto = tamanho[tamanho['Nome'] == produto_selecionado]
 
+    st.write(linha_produto)
+
     if not linha_produto.empty:
         quantidadeRegistrada = linha_produto['Quantidade Atual'].values[0] 
         unidadeRegistrada = linha_produto['Unidade'].values[0] 
-        indice = dados.index[dados['Nome'] == produto_selecionado].tolist()
+        indice = dados.index[dados['Código'] == linha_produto['Código']].tolist()
         linha = indice[0] + 2
 
         st.write(f"Última quantidade registrada: {quantidadeRegistrada}")
