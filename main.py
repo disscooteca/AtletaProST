@@ -429,7 +429,7 @@ if selected == "Painel de Controle":
     co1, co2, co3 = st.columns((1, 1, 1))
 
     with co1:
-        st.image("Imagem1.png", use_container_width=True)
+        st.image("Imagem1.png", width='stretch')
 
     with co2:
         st.markdown(
@@ -440,10 +440,10 @@ if selected == "Painel de Controle":
             """, 
             unsafe_allow_html=True
         )
-        st.image("Imagem3.png", use_container_width=True)
+        st.image("Imagem3.png", width='stretch')
 
     with co3:
-        st.image("Imagem2.png", use_container_width=True)
+        st.image("Imagem2.png", width='stretch')
 
     # Seção de serviços
     st.markdown('<h2 class="section-header"></h2>', unsafe_allow_html=True)
@@ -703,7 +703,7 @@ if selected == "Painel de Controle":
                 hovertemplate='<b>%{y}</b><br>Estoque Segurança: %{x:.0f}<extra></extra>'
             ))
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         st.divider()
     
 elif selected == "Controle de Inventário":
@@ -1044,7 +1044,7 @@ elif selected == "Edição de Informações":
 
     st.write("- - -")
 
-    st.header("Para editar as informações de um produto acesse o google sheets com os dados e mude as informações que estejam erradas")
+    st.header("- Para editar as informações de um produto acesse o google sheets com os dados e mude as informações que estejam erradas")
     st.subheader("Cuidado para não apagar informações importantes, mudar o formato e organização da planilha pois caso faça algo errado pode bugar o sistema")
 
     # opcoesEdicao = dados["Família"].unique().tolist()
