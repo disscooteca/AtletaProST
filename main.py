@@ -713,14 +713,14 @@ elif selected == "Controle de Inventário":
     familia = dados[dados["Família"] == escolha]
 
     # Obter lista de nomes
-    categorias = familia['Categoria'].tolist()
+    categorias = familia['Categoria'].unique().tolist()
     
-    categoria = st.radio("Escolha uma categoria de produto:", categorias)
+    categoria = st.selectbox("Escolha uma categoria de produto:", categorias)
     
     # Encontrar a linha correspondente ao produto selecionado
     categoria = familia[familia['Categoria'] == categoria]
 
-    nomes = categoria['Nome'].tolist()
+    nomes = categoria['Nome'].unique().tolist()
     
     produto_selecionado = st.radio("ESCOLHA UM PRODUTO:", nomes)
     
