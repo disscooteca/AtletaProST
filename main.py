@@ -130,8 +130,8 @@ def status():
             continue
             
         # Primeira condição: Se não for semiacabado e PO vazia
-        st.write(esStatus[0], ordemdeCompraStatus[0] == "")
-        if esStatus[0] != " - " and ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - ":
+        st.write(esStatus[0] != " - ", (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "))
+        if esStatus[0] != " - " and (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "):
             try:
                 # CORREÇÃO: Acessar primeiro elemento da lista
                 if quantidadeStatus[0] < esStatus[0]:
