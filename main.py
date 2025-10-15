@@ -123,7 +123,7 @@ def status():
         esStatus = linha_status["Estoque de Segurança"].unique().tolist()
         ordemdeCompraStatus = linha_status["PO"].unique().tolist()
         statusStatus = linha_status["Status"].unique().tolist()
-        
+
         # Verificar se as listas não estão vazias
         if not all([quantidadeStatus, esStatus, ordemdeCompraStatus, statusStatus]):
             continue
@@ -707,12 +707,19 @@ elif selected == "Controle de Inventário":
 
     st.write('- - -')
 
-    opcoes = dados["Categoria"].unique().tolist()
+    opcoes = dados["Família"].unique().tolist()
     escolha = st.selectbox("Escolha uma família de produtos", opcoes)
     
-    categoria = dados[dados["Categoria"] == escolha]
+    familia = dados[dados["Família"] == escolha]
 
     # Obter lista de nomes
+    categorias = familia['Categoria'].tolist()
+    
+    categoria = st.radio("Escolha uma categoria de produto:", categorias)
+    
+    # Encontrar a linha correspondente ao produto selecionado
+    categoria = familia[familia['Categoria'] == categoria]
+
     nomes = categoria['Nome'].tolist()
     
     produto_selecionado = st.radio("ESCOLHA UM PRODUTO:", nomes)
