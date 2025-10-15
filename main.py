@@ -521,21 +521,24 @@ if selected == "Painel de Controle":
         db = dados[dados["Família"] == f]
         st.subheader(f"Gráfico da família de produtos {f}:")
         
+        status_colors = {'vermelho': 'red', 'verde': 'green'}
+
         fig = px.bar(db, 
-                    y='Nome', 
-                    x="Quantidade Atual", 
-                    color="Família",
-                    color_discrete_map=family_colors,
-                    title=f'Quantidade de produtos - Família {f}', 
-                    orientation='h',
-                    text='Quantidade Atual',
-                    hover_data={
-                        'Nome': True,
-                        'Quantidade Atual': ':.0f',
-                        'Estoque de Segurança': ':.0f',  # Adiciona estoque de segurança no hover
-                        'Família': False
-                    })
-        
+                            y='Nome', 
+                            x="Quantidade Atual", 
+                            color="cor_status",  # Usar a coluna de status para cor
+                            color_discrete_map=status_colors,  # Mapeamento das cores
+                            title=f'Quantidade de produtos - Família {f}', 
+                            orientation='h',
+                            text='Quantidade Atual',
+                            hover_data={
+                                'Nome': True,
+                                'Quantidade Atual': ':.0f',
+                                'Estoque de Segurança': ':.0f',
+                                'Família': True,  # Mantive a família no hover para referência
+                                'cor_status': False  # Remove a coluna de cor do hover
+                            })
+
         # Personalização do layout
         fig.update_layout(
             title={
@@ -557,7 +560,7 @@ if selected == "Painel de Controle":
                 y=1.02,
                 xanchor="right",
                 x=1,
-                title_text=''
+                title_text='Status:'
             ),
             margin=dict(l=150, r=50, t=100, b=50),
             uniformtext_minsize=10,
@@ -565,7 +568,7 @@ if selected == "Painel de Controle":
             plot_bgcolor='rgba(0,0,0,0)',
             paper_bgcolor='rgba(0,0,0,0)'
         )
-        
+
         # Personalização do hover
         fig.update_traces(
             texttemplate='%{text:.0f}',
@@ -573,9 +576,10 @@ if selected == "Painel de Controle":
             hovertemplate='<b>%{y}</b><br>' +
                         'Quantidade Atual: %{x:.0f}<br>' +
                         'Estoque Segurança: %{customdata[0]:.0f}<br>' +
+                        'Família: %{customdata[1]}<br>' +
                         '<extra></extra>'
         )
-        
+
         # Adicionar linhas verticais para o Estoque de Segurança de cada produto
         fig.add_trace(go.Scatter(
             y=db['Nome'],
@@ -590,7 +594,10 @@ if selected == "Painel de Controle":
             ),
             hoverinfo='x'
         ))
-        
+
+        # Atualizar a legenda para mostrar os status de forma mais clara
+        fig.for_each_trace(lambda trace: trace.update(name='Abaixo do Estoque' if trace.name == 'vermelho' else 'Acima do Estoque'))
+
         st.plotly_chart(fig, use_container_width=True)
         st.divider()
     
