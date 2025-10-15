@@ -1044,85 +1044,88 @@ elif selected == "Edição de Informações":
 
     st.write("- - -")
 
-    opcoesEdicao = dados["Família"].unique().tolist()
-    escolhaEdicao = st.selectbox("Escolha uma família de produtos", opcoesEdicao)
+    st.header("Para editar as informações de um produto acesse o google sheets com os dados e mude as informações que estejam erradas")
+    st.subheader("Cuidado para não apagar informações importantes, mudar o formato e organização da planilha pois caso faça algo errado pode bugar o sistema")
+
+    # opcoesEdicao = dados["Família"].unique().tolist()
+    # escolhaEdicao = st.selectbox("Escolha uma família de produtos", opcoesEdicao)
     
-    familiaEdicao = dados[dados["Família"] == escolhaEdicao]
+    # familiaEdicao = dados[dados["Família"] == escolhaEdicao]
 
-    categorias = familiaEdicao['Categoria'].unique().tolist()
+    # categorias = familiaEdicao['Categoria'].unique().tolist()
     
-    categoria = st.selectbox("Escolha uma categoria de produto:", categorias)
+    # categoria = st.selectbox("Escolha uma categoria de produto:", categorias)
     
-    # Encontrar a linha correspondente ao produto selecionado
-    categoriaEdicao = familiaEdicao[familiaEdicao['Categoria'] == categoria]
+    # # Encontrar a linha correspondente ao produto selecionado
+    # categoriaEdicao = familiaEdicao[familiaEdicao['Categoria'] == categoria]
 
-    tamanhos = categoriaEdicao['Tamanho'].unique().tolist()
+    # tamanhos = categoriaEdicao['Tamanho'].unique().tolist()
     
-    tamanho = st.selectbox("Escolha o tamanho:", tamanhos)
+    # tamanho = st.selectbox("Escolha o tamanho:", tamanhos)
 
-    tamanho = categoriaEdicao[categoriaEdicao['Tamanho'] == tamanho]
+    # tamanho = categoriaEdicao[categoriaEdicao['Tamanho'] == tamanho]
 
-    nomes = tamanho['Nome'].tolist()
+    # nomes = tamanho['Nome'].tolist()
     
-    produto_selecionadoEdicao = st.radio("ESCOLHA UM PRODUTO:", nomes)
+    # produto_selecionadoEdicao = st.radio("ESCOLHA UM PRODUTO:", nomes)
     
-    # Encontrar a linha correspondente ao produto selecionado
-    linha_produtoEdicao = tamanho[tamanho['Nome'] == produto_selecionadoEdicao]
+    # # Encontrar a linha correspondente ao produto selecionado
+    # linha_produtoEdicao = tamanho[tamanho['Nome'] == produto_selecionadoEdicao]
 
-    st.write("- - -")
+    # st.write("- - -")
 
-    st.header("Edite as informações:")
+    # st.header("Edite as informações:")
 
-    with st.form("editeInfo"):
+    # with st.form("editeInfo"):
 
-        codigoProdutoEdicao = st.text_input("Informe o novo código do produto", max_chars= 50, value=linha_produtoEdicao["Código"].iloc[0])
+    #     codigoProdutoEdicao = st.text_input("Informe o novo código do produto", max_chars= 50, value=linha_produtoEdicao["Código"].iloc[0])
 
-        nomeProdutoEdicao = st.text_input("Informe o nome do produto", max_chars= 50, value=linha_produtoEdicao["Nome"].iloc[0])
+    #     nomeProdutoEdicao = st.text_input("Informe o nome do produto", max_chars= 50, value=linha_produtoEdicao["Nome"].iloc[0])
 
-        categoriaProdutoEdicao = st.text_input("Edite a categoria do produto", max_chars= 50, value=linha_produtoEdicao["Categoria"].iloc[0])
+    #     categoriaProdutoEdicao = st.text_input("Edite a categoria do produto", max_chars= 50, value=linha_produtoEdicao["Categoria"].iloc[0])
 
-        fornecedorProdutoEdicao = st.text_input("Informe o fornecedor do produto", max_chars= 50, value=linha_produtoEdicao["Fornecedor Principal"].iloc[0])
+    #     fornecedorProdutoEdicao = st.text_input("Informe o fornecedor do produto", max_chars= 50, value=linha_produtoEdicao["Fornecedor Principal"].iloc[0])
 
-        contatoFornecedorEdicao = st.text_input("Informe o contato do fornecedor do produto", max_chars= 50, value=linha_produtoEdicao["Contato Fornecedor"].iloc[0])
+    #     contatoFornecedorEdicao = st.text_input("Informe o contato do fornecedor do produto", max_chars= 50, value=linha_produtoEdicao["Contato Fornecedor"].iloc[0])
 
-        localizacaoEstoqueEdicao = st.text_input("Informe a localização do produto no estoque", max_chars= 50, value=linha_produtoEdicao["Localização"].iloc[0])
+    #     localizacaoEstoqueEdicao = st.text_input("Informe a localização do produto no estoque", max_chars= 50, value=linha_produtoEdicao["Localização"].iloc[0])
 
-        unidadeProdutoEdicao = st.text_input("Informe o tipo de unidade do produto", max_chars= 50, value=linha_produtoEdicao["Unidade"].iloc[0])
+    #     unidadeProdutoEdicao = st.text_input("Informe o tipo de unidade do produto", max_chars= 50, value=linha_produtoEdicao["Unidade"].iloc[0])
 
-        quantidadeProdutoEdicao = st.number_input("Informe a quantidade do produto de acordo com a unidade registrada", step=1, value=linha_produtoEdicao["Quantidade Atual"].iloc[0])
+    #     quantidadeProdutoEdicao = st.number_input("Informe a quantidade do produto de acordo com a unidade registrada", step=1, value=linha_produtoEdicao["Quantidade Atual"].iloc[0])
 
-        loteMinProdutoEdicao = st.number_input("Informe o lote mínimo em unidades registradas", step=1, value=linha_produtoEdicao["Lote mínimo"].iloc[0])
+    #     loteMinProdutoEdicao = st.number_input("Informe o lote mínimo em unidades registradas", step=1, value=linha_produtoEdicao["Lote mínimo"].iloc[0])
 
-        esProdutoEdicao = st.number_input("Informe a quantidade de estoque de segurança para o produto na unidade registrada", step=1, value=linha_produtoEdicao["Estoque de Segurança"].iloc[0])
+    #     esProdutoEdicao = st.number_input("Informe a quantidade de estoque de segurança para o produto na unidade registrada", step=1, value=linha_produtoEdicao["Estoque de Segurança"].iloc[0])
 
-        submitted = st.form_submit_button("Editar")
+    #     submitted = st.form_submit_button("Editar")
 
-        if submitted:
-            indiceEdicao = dados.index[dados['Código'] == linha_produtoEdicao['Código'].iloc[0]].tolist()
-            linhaEdicao = indiceEdicao[0] + 2 if indiceEdicao else st.write("Problema")
+    #     if submitted:
+    #         indiceEdicao = dados.index[dados['Código'] == linha_produtoEdicao['Código'].iloc[0]].tolist()
+    #         linhaEdicao = indiceEdicao[0] + 2 if indiceEdicao else st.write("Problema")
 
-            # Criar a lista de valores para a linha inteira
-            valores_linha = [
-                codigoProdutoEdicao,
-                nomeProdutoEdicao,
-                categoriaProdutoEdicao,
-                fornecedorProdutoEdicao,
-                contatoFornecedorEdicao,
-                localizacaoEstoqueEdicao,
-                unidadeProdutoEdicao,
-                int(quantidadeProdutoEdicao),  # Convertendo para int como no exemplo original
-                esProdutoEdicao,
-                loteMinProdutoEdicao
-            ]
+    #         # Criar a lista de valores para a linha inteira
+    #         valores_linha = [
+    #             codigoProdutoEdicao,
+    #             nomeProdutoEdicao,
+    #             categoriaProdutoEdicao,
+    #             fornecedorProdutoEdicao,
+    #             contatoFornecedorEdicao,
+    #             localizacaoEstoqueEdicao,
+    #             unidadeProdutoEdicao,
+    #             int(quantidadeProdutoEdicao),  # Convertendo para int como no exemplo original
+    #             esProdutoEdicao,
+    #             loteMinProdutoEdicao
+    #         ]
 
-            # Fazer o batch update
-            planilhaEstoque.batch_update([{
-                'range': f'A{linhaEdicao}:J{linhaEdicao}',  # Colunas A até J (1 a 10)
-                'values': [valores_linha]
-            }])
+    #         # Fazer o batch update
+    #         planilhaEstoque.batch_update([{
+    #             'range': f'A{linhaEdicao}:J{linhaEdicao}',  # Colunas A até J (1 a 10)
+    #             'values': [valores_linha]
+    #         }])
 
-            status()
+    #         status()
 
-            st.toast("Produto adicionado com sucesso!", icon="🎉")
+    #         st.toast("Produto adicionado com sucesso!", icon="🎉")
 
-            st.rerun()
+    #         st.rerun()
