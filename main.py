@@ -133,8 +133,8 @@ def status():
         st.write(esStatus[0] != " - ", (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "))
         if esStatus[0] != " - " and (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "):
             try:
-                # CORREÇÃO: Acessar primeiro elemento da lista
-                if quantidadeStatus[0] < esStatus[0]:
+                st.write(quantidadeStatus[0] < esStatus[0], statusStatus[0] != "Atenção")
+                if quantidadeStatus[0] < esStatus[0] and statusStatus[0] != "Atenção":
                     indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                     linhaStatus = indiceStatus[0] + 2
                     planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
