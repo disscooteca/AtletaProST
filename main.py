@@ -134,10 +134,11 @@ def status():
         if esStatus[0] != " - " and (ordemdeCompraStatus[0] == "" or ordemdeCompraStatus[0] == " - "):
             try:
                 st.write(quantidadeStatus[0] < esStatus[0], statusStatus[0] != "Atenção")
-                st.write(dados.index[dados['Código'] == produtos].tolist())
+                
                 if quantidadeStatus[0] < esStatus[0] and statusStatus[0] != "Atenção":
                     indiceStatus = dados.index[dados['Código'] == produtos].tolist()
                     linhaStatus = indiceStatus[0] + 2
+                    st.write(linhaStatus)
                     planilhaEstoque.update_cell(row=int(linhaStatus), col=14, value="Atenção")
   
                     if statusStatus[0] != " - ":
