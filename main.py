@@ -517,14 +517,26 @@ if selected == "Painel de Controle":
     family_colors = {family: color_palette[i % len(color_palette)] 
                     for i, family in enumerate(unique_families)}
 
-    for f in familia:
-        db = dados[dados["Família"] == f]
-        st.subheader(f"Gráfico da família de produtos {f}:")
+    # Primeiro, vamos agrupar por Família e Categoria
+    grupos = dados.groupby(['Família', 'Categoria'])
+
+    for (f, categoria), db_grupo in grupos:
+        st.subheader(f"Gráfico da família {f} - Categoria {categoria}:")
         
-        # Primeiro, converter estoque de segurança para numérico onde possível
-        db['Estoque_Seguranca_Num'] = pd.to_numeric(db['Estoque de Segurança'], errors='coerce')
+        # Ordenar por Tamanho se existir a coluna
+        if 'Tamanho' in db_grupo.columns:
+            db_grupo = db_grupo.sort_values('Tamanho')
         
-        db['StatusE'] = db.apply(lambda row: 
+        # Criar um label para o eixo Y que inclui Tamanho se existir
+        if 'Tamanho' in db_grupo.columns:
+            db_grupo['Label_Y'] = db_grupo['Nome'] + ' (' + db_grupo['Tamanho'].astype(str) + ')'
+        else:
+            db_grupo['Label_Y'] = db_grupo['Nome']
+        
+        # Converter estoque de segurança para numérico onde possível
+        db_grupo['Estoque_Seguranca_Num'] = pd.to_numeric(db_grupo['Estoque de Segurança'], errors='coerce')
+        
+        db_grupo['StatusE'] = db_grupo.apply(lambda row: 
             'Abaixo do Estoque' if (pd.notna(row['Estoque_Seguranca_Num']) and 
                                 row['Quantidade Atual'] < row['Estoque_Seguranca_Num']) 
             else 'Acima do Estoque' if pd.notna(row['Estoque_Seguranca_Num'])
@@ -538,26 +550,29 @@ if selected == "Painel de Controle":
         }
 
         # Criar o gráfico
-        fig = px.bar(db, 
-                            y='Nome', 
+        fig = px.bar(db_grupo, 
+                            y='Label_Y', 
                             x="Quantidade Atual", 
                             color="StatusE",
                             color_discrete_map=status_colors,
-                            title=f'Quantidade de produtos - Família {f}', 
+                            title=f'Família {f} - Categoria {categoria}', 
                             orientation='h',
                             text='Quantidade Atual',
                             hover_data={
                                 'Nome': True,
+                                'Tamanho': True if 'Tamanho' in db_grupo.columns else False,
                                 'Quantidade Atual': ':.0f',
-                                'Estoque de Segurança': True,  # Mantém o formato original
+                                'Estoque de Segurança': True,
                                 'StatusE': False,
-                                'Família': True
+                                'Família': False,
+                                'Categoria': False,
+                                'Label_Y': False
                             })
                 
         # Personalização do layout
         fig.update_layout(
             title={
-                'text': f"Quantidade de produtos - Família {f}",
+                'text': f"Família {f} - Categoria {categoria}",
                 'y': 0.95,
                 'x': 0.5,
                 'xanchor': 'center',
@@ -565,8 +580,8 @@ if selected == "Painel de Controle":
                 'font': {'size': 20}
             },
             xaxis_title='Quantidade',
-            yaxis_title='Produto',
-            height=500,
+            yaxis_title='Produto (Tamanho)' if 'Tamanho' in db_grupo.columns else 'Produto',
+            height=max(400, len(db_grupo) * 30),  # Altura dinâmica baseada no número de produtos
             hovermode='y unified',
             showlegend=True,
             legend=dict(
@@ -577,7 +592,7 @@ if selected == "Painel de Controle":
                 x=1,
                 title_text='Status do Estoque:'
             ),
-            margin=dict(l=150, r=50, t=100, b=50),
+            margin=dict(l=200, r=50, t=100, b=50),  # Aumentei margem esquerda para labels maiores
             uniformtext_minsize=10,
             uniformtext_mode='hide',
             plot_bgcolor='rgba(0,0,0,0)',
@@ -585,21 +600,24 @@ if selected == "Painel de Controle":
         )
 
         # Personalização do hover
+        hovertemplate = '<b>%{customdata[0]}</b><br>'
+        if 'Tamanho' in db_grupo.columns:
+            hovertemplate += 'Tamanho: %{customdata[1]}<br>'
+        hovertemplate += 'Quantidade Atual: %{x:.0f}<br>' + \
+                        'Estoque Segurança: %{customdata[2 if "Tamanho" in db_grupo.columns else 1]}<br>' + \
+                        '<extra></extra>'
+
         fig.update_traces(
             texttemplate='%{text:.0f}',
             textposition='outside',
-            hovertemplate='<b>%{y}</b><br>' +
-                        'Quantidade Atual: %{x:.0f}<br>' +
-                        'Estoque Segurança: %{customdata[0]}<br>' +  # Mantém string original
-                        'Família: %{customdata[1]}<br>' +
-                        '<extra></extra>'
+            hovertemplate=hovertemplate
         )
 
         # Adicionar linhas verticais APENAS para produtos com estoque numérico
-        db_com_estoque = db[pd.notna(db['Estoque_Seguranca_Num'])]
+        db_com_estoque = db_grupo[pd.notna(db_grupo['Estoque_Seguranca_Num'])]
         if not db_com_estoque.empty:
             fig.add_trace(go.Scatter(
-                y=db_com_estoque['Nome'],
+                y=db_com_estoque['Label_Y'],
                 x=db_com_estoque['Estoque_Seguranca_Num'],
                 name='Estoque de Segurança',
                 mode='markers',
