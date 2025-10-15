@@ -466,6 +466,7 @@ if selected == "Painel de Controle":
             atualatencao = atencao['Quantidade Atual'].tolist()
             segurancaatencao = atencao['Estoque de Segurança'].tolist()
             minimoatencao = atencao['Lote mínimo'].tolist()
+            observacaoatencao = atencao['Observação'].tolist()
             st.subheader("Produto(s) com estoque crítico:")
             i = 0
 
@@ -479,6 +480,7 @@ if selected == "Painel de Controle":
                     st.markdown(f"Quantidade atual: {atualatencao[i]}.\n")
                     st.markdown(f"Estoque de Segurança: {segurancaatencao[i]}.\n")
                     st.markdown(f"Lote mínimo: {minimoatencao[i]}.\n")
+                    st.markdown(f"Observações: {observacaoatencao[i]}.\n")
                     st.subheader(f"ABRA ORDEM DE COMPRA!\n")
                     i += 1
                          
@@ -498,6 +500,7 @@ if selected == "Painel de Controle":
             segurancaaberto = aberto['Estoque de Segurança'].tolist()
             comproaberto= aberto['PO'].tolist()
             previsaoPO= aberto['Previsão PO'].tolist()
+            observacaoPO= aberto['Observação'].tolist()
             st.subheader("Produto(s) com Ordem de Compra Aberta:")
             i = 0
 
@@ -512,6 +515,7 @@ if selected == "Painel de Controle":
                     st.markdown(f"Estoque de Segurança: {segurancaaberto[i]}.\n")
                     st.markdown(f"Comprado: {comproaberto[i]}.\n")
                     st.markdown(f"Previsão de chegada: {previsaoPO[i]}.\n")
+                    st.markdown(f"Observações: {observacaoPO[i]}.\n")
                     if st.button(f"Fechar Ordem de Compra", key=f"btn_{codigoaberto[i]}"):
                         indicePO = dados.index[dados['Código'] == codigoaberto].tolist()
                         linhaPO = indicePO[0] + 2
@@ -732,16 +736,16 @@ elif selected == "Controle de Inventário":
     # Encontrar a linha correspondente ao produto selecionado
     linha_produto = tamanho[tamanho['Nome'] == produto_selecionado]
 
-    st.write(linha_produto)
-
     if not linha_produto.empty:
         quantidadeRegistrada = linha_produto['Quantidade Atual'].values[0] 
         unidadeRegistrada = linha_produto['Unidade'].values[0] 
+        observacoesRegistrada = linha_produto['Observação'].values[0] 
         indice = dados.index[dados['Código'] == linha_produto['Código'].iloc[0]].tolist()
         linha = indice[0] + 2 if indice else st.write("Problema")
 
         st.write(f"Última quantidade registrada: {quantidadeRegistrada}")
         st.write(f"Unidade registrada: {unidadeRegistrada}")
+        st.write(f"Observações: {observacoesRegistrada}")
 
         with st.form("Ajuste_Estoque"):
             quantidade = st.text_input(f"Quantidade de {produto_selecionado} atual:")
@@ -794,12 +798,14 @@ elif selected == "Apontamento":
         quantidadeRegistrada = linha_produto['Quantidade Atual'].values[0]
         localRegistrado = linha_produto['Localização'].values[0] 
         unidadeRegistrada = linha_produto['Unidade'].values[0] 
+        observacoesRegistrada = linha_produto['Observação'].values[0] 
         indice = dados.index[dados['Código'] == linha_produto['Código'].iloc[0]].tolist()
         linha = indice[0] + 2 if indice else st.write("Problema")
 
         st.write(f"Localização: {localRegistrado}")
         st.write(f"Última quantidade registrada: {quantidadeRegistrada}")
         st.write(f"Unidade registrada: {unidadeRegistrada}")
+        st.write(f"Observacoes: {observacoesRegistrada}")
         
         quantidade = st.number_input(f"Quantidade de {produto_selecionado} em movimento ({InputOutput}):", step=1)
 
@@ -1002,8 +1008,9 @@ elif selected == "Ordem de Compra":
     ordemPO = linha_produtoPO["PO"].tolist()
 
     with st.form("abrirPO"):
-
         st.write(f"Quantidade atual: {linha_produtoPO['Quantidade Atual'].iloc[0]}")
+        observacoesRegistrada = linha_produtoPO['Observação'].values[0]
+        st.write(f"Quantidade atual: {observacoesRegistrada}")
 
         if linha_produtoPO['Status'].iloc[0] == "Atenção":
             st.warning("Quantidade atual registrada menor que Estoque de segurança")
