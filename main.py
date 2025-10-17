@@ -180,6 +180,7 @@ def status():
 def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.pdf", max_linhas_por_pagina=35):
     
     dadospdf = dados[["Código", "Nome", "Localização", "Unidade", "Quantidade Atual", "Tamanho"]]
+    dadospdf["Código"] = dadospdf["Código"].astype(str).str.zfill(3)
     dadospdf["Contagem"] = ""
 
     dadospdf = dadospdf.rename(columns={
