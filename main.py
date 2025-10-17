@@ -198,8 +198,8 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
         'Localização': 'Loc',
         'Unidade': 'Unidade',
         'Quantidade Atual': 'Qtd',
-        'Contagem': 'Contagem',
-        'Tamanho': 'Tamanho'
+        'Contagem': 'Ajuste',
+        'Tamanho': 'T'
     })
     
     # Configurar PDF em landscape
@@ -210,16 +210,16 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     larguras_personalizadas = {
         'Cod': 20,      
         'Nome': 50,
-        'Tamanho' : 20,    
+        'T' : 10,    
         'Loc': 30,   
-        'Unidade': 25,
+        'Unidade': 35,
         'Qtd': 15,  
-        'Contagem': 20
+        'Ajuste': 15
     }
     
     # Ordem das colunas (a mesma do DataFrame)
     colunas_ordenadas = ['Cod', 'Nome', 'Tamanho', 'Loc', 'Unidade', 
-                         'Qtd', 'Contagem']
+                         'Qtd', 'Ajuste']
     
     # Verificar se a soma das larguras cabe na página
     largura_pagina = 280  # A4 landscape width
@@ -279,10 +279,10 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
                 
                 # Truncar texto muito longo (especialmente para coluna Nome)
                 texto = str(valor)
-                if coluna == 'Nome' and len(texto) > 35:
-                    texto = texto[:32] + "..."
-                elif len(texto) > 20:
-                    texto = texto[:17] + "..."
+                if coluna == 'Nome' and len(texto) > 50:
+                    texto = texto[:47] + "..."
+                elif len(texto) > 25:
+                    texto = texto[:22] + "..."
                 
                 
                 alinhamento = Align.C
