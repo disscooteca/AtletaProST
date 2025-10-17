@@ -202,7 +202,7 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
         'Nome': 70,     
         'T': 12,   
         'Loc': 25, 
-        'Unidade': 25,   
+        'Unidade': 40,   
         'Qtd': 15,  
         'Ajuste': 18
     }
