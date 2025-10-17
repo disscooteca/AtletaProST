@@ -178,18 +178,8 @@ def status():
             planilhaEstoque.update_cell(row=int(linhaStatus), col=15, value="NA")
 
 def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.pdf", max_linhas_por_pagina=35):
-    """
-    Gera um PDF com tabela que quebra automaticamente em múltiplas páginas
     
-    Parâmetros:
-    - dados: DataFrame ou lista de listas com os dados
-    - titulo: Título do documento
-    - nome_arquivo: Nome do arquivo de saída
-    - max_linhas_por_pagina: Número máximo de linhas por página
-    """
-
     dadospdf = dados[["Código", "Nome", "Localização", "Unidade", "Quantidade Atual", "Tamanho"]]
-
     dadospdf["Contagem"] = ""
 
     dadospdf = dadospdf.rename(columns={
@@ -199,30 +189,29 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
         'Unidade': 'Unidade',
         'Quantidade Atual': 'Qtd',
         'Contagem': 'Ajuste',
-        'Tamanho': 'T'
+        'Tamanho': 'T'  # Mantido como 'Tamanho' para consistência
     })
     
-    # Configurar PDF em landscape
+    # Configurar PDF
     pdf = FPDF(orientation="portrait", unit="mm", format="A4")
     pdf.set_auto_page_break(auto=True, margin=15)
     
-    # LARGURAS PERSONALIZADAS PARA CADA COLUNA
+    # LARGURAS PERSONALIZADAS - AUMENTEI A COLUNA NOME
     larguras_personalizadas = {
-        'Cod': 20,      
-        'Nome': 50,
-        'T' : 10,    
-        'Loc': 30,   
-        'Unidade': 35,
+        'Cod': 15, 
+        'Nome': 70,     
+        'T': 12,   
+        'Loc': 25, 
+        'Unidade': 25,   
         'Qtd': 15,  
-        'Ajuste': 15
+        'Ajuste': 18
     }
     
-    # Ordem das colunas (a mesma do DataFrame)
-    colunas_ordenadas = ['Cod', 'Nome', 'Tamanho', 'Loc', 'Unidade', 
-                         'Qtd', 'Ajuste']
+    # ORDEM CORRIGIDA - deve corresponder às colunas renomeadas
+    colunas_ordenadas = ['Cod', 'Nome', 'T', 'Loc', 'Unidade', 'Qtd', 'Ajuste']
     
     # Verificar se a soma das larguras cabe na página
-    largura_pagina = 280  # A4 landscape width
+    largura_pagina = 210  # A4 portrait width (não landscape como antes)
     margens = 10
     largura_util = largura_pagina - (2 * margens)
     largura_total = sum(larguras_personalizadas.values())
@@ -254,49 +243,76 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
         dadospdf_pagina = dadospdf.iloc[inicio:fim]
         
         # Cabeçalho da tabela
-        pdf.set_font("Arial", style="B", size=10)
+        pdf.set_font("Arial", style="B", size=9)  # Reduzido para caber melhor
         pdf.ln(5)
         
-        # Desenhar linha do cabeçalho com larguras personalizadas
+        # Desenhar linha do cabeçalho
         pdf.set_fill_color(200, 200, 200)
         for coluna in colunas_ordenadas:
             largura = larguras_personalizadas[coluna]
             pdf.cell(largura, 8, str(coluna), border=1, fill=True, align=Align.C)
         pdf.ln()
         
-        # Dados da tabela com larguras personalizadas
-        pdf.set_font("Arial", size=9)
+        # Dados da tabela
+        pdf.set_font("Arial", size=8)  # Fonte menor para caber mais texto
+        
         for indice, linha in dadospdf_pagina.iterrows():
-            # Alternar cores para melhor legibilidade
+            # Alternar cores
             if indice % 2 == 0:
                 pdf.set_fill_color(240, 240, 240)
             else:
                 pdf.set_fill_color(255, 255, 255)
             
+            # ENCONTRAR A ALTURA MÁXIMA PARA ESTA LINHA (para multi-linha)
+            alturas_linha = []
+            
             for coluna in colunas_ordenadas:
+                valor = str(linha[coluna])
                 largura = larguras_personalizadas[coluna]
-                valor = linha[coluna]
                 
-                # Truncar texto muito longo (especialmente para coluna Nome)
-                texto = str(valor)
-                if coluna == 'Nome' and len(texto) > 50:
-                    texto = texto[:47] + "..."
-                elif len(texto) > 25:
-                    texto = texto[:22] + "..."
+                # Calcular quantas linhas serão necessárias para este texto
+                if coluna == 'Nome':  # Apenas para a coluna Nome permitimos multi-linha
+                    # Estimar quantos caracteres cabem por linha
+                    chars_por_linha = largura // 1.8  # Aproximação empírica
+                    if len(valor) > chars_por_linha:
+                        num_linhas = max(2, (len(valor) // chars_por_linha) + 1)
+                        alturas_linha.append(num_linhas * 4)  # 4mm por linha
+                    else:
+                        alturas_linha.append(6)
+                else:
+                    alturas_linha.append(6)
+            
+            altura_linha = max(alturas_linha)
+            
+            # DESENHAR A LINHA
+            x_inicial = pdf.get_x()
+            y_inicial = pdf.get_y()
+            
+            for i, coluna in enumerate(colunas_ordenadas):
+                valor = str(linha[coluna])
+                largura = larguras_personalizadas[coluna]
                 
+                pdf.set_xy(x_inicial, y_inicial)
                 
-                alinhamento = Align.C
-                
-                pdf.cell(largura, 6, texto, border=1, fill=True, align=alinhamento)
-            pdf.ln()
+                if coluna == 'Nome' and len(valor) > 35:
+                    # Usar multi_cell apenas para a coluna Nome quando necessário
+                    pdf.multi_cell(largura, 4, valor, border=1, fill=True, align=Align.L)
+                    # Ajustar a posição X para a próxima célula
+                    x_inicial += largura
+                else:
+                    # Para outras colunas, usar cell normal
+                    pdf.cell(largura, altura_linha, valor, border=1, fill=True, align=Align.C)
+                    x_inicial += largura
+            
+            pdf.ln(altura_linha)
     
     # Salvar arquivo
-
     arquivo_salvo = salvar_pdf_no_drive(
-                        pdf=pdf,
-                        nome_arquivo="estoque_pdf",
-                        pasta_id=st.secrets["id_estoque"]
-                    )
+        pdf=pdf,
+        nome_arquivo="estoque_pdf",
+        pasta_id=st.secrets["id_estoque"]
+    )
+    
     if arquivo_salvo:
         st.success("PDF salvo com sucesso no Google Drive!")
         st.write(f"**Nome:** {arquivo_salvo['name']}")
