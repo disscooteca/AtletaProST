@@ -188,7 +188,7 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     - max_linhas_por_pagina: Número máximo de linhas por página
     """
 
-    dadospdf = dados[["Código", "Nome", "Localização", "Unidade", "Quantidade Atual"]]
+    dadospdf = dados[["Código", "Nome", "Localização", "Unidade", "Quantidade Atual", "Tamanho"]]
 
     dadospdf["Contagem"] = ""
 
@@ -197,8 +197,9 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
         'Nome': 'Nome', 
         'Localização': 'Loc',
         'Unidade': 'Unidade',
-        'Quantidade Atual': 'Quantidade',
-        'Contagem': 'Contagem'
+        'Quantidade Atual': 'Qtd',
+        'Contagem': 'Contagem',
+        'Tamanho': 'Tamanho'
     })
     
     # Configurar PDF em landscape
@@ -208,16 +209,17 @@ def gerar_pdf_tabela_multipagina(titulo="ESTOQUE", nome_arquivo="tabela_estoque.
     # LARGURAS PERSONALIZADAS PARA CADA COLUNA
     larguras_personalizadas = {
         'Cod': 20,      
-        'Nome': 40,     
+        'Nome': 50,
+        'Tamanho' : 20,    
         'Loc': 30,   
-        'Unidade': 35,
-        'Quantidade': 20,  
+        'Unidade': 25,
+        'Qtd': 15,  
         'Contagem': 20
     }
     
     # Ordem das colunas (a mesma do DataFrame)
-    colunas_ordenadas = ['Cod', 'Nome', 'Loc', 'Unidade', 
-                         'Quantidade', 'Contagem']
+    colunas_ordenadas = ['Cod', 'Nome', 'Tamanho', 'Loc', 'Unidade', 
+                         'Qtd', 'Contagem']
     
     # Verificar se a soma das larguras cabe na página
     largura_pagina = 280  # A4 landscape width
