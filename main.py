@@ -113,6 +113,9 @@ dados_estoque = planilhaEstoque.get_all_records()
 
 dados = pd.DataFrame(dados_estoque)
 
+if dados.empty:
+    st.header("Dados vazios, registre produtos")
+    
 #Função de Status do estoque ("Atenção" caso abaixo)
 def status():
     for produtos in dados["Código"]:
