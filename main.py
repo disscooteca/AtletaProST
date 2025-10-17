@@ -112,6 +112,7 @@ planilhaEstoque = planilha_completa.get_worksheet(0)
 dados_estoque = planilhaEstoque.get_all_records() 
 
 dados = pd.DataFrame(dados_estoque)
+dados["Código"] = dados["Código"].astype(str)
 
 if dados.empty:
     st.header("Dados vazios, registre produtos")
