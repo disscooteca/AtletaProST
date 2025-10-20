@@ -134,7 +134,9 @@ if dados.empty:
 
             nomeProduto = st.text_input("Informe o nome do insumo", max_chars= 50)
 
-            familiaProduto = st.selectbox("Selecione a família do insumo dos tipos já registrados ou ESCREVA UMA NOVA", dados["Família"].unique(), accept_new_options=True)
+            opcoes_familia = dados["Família"].unique().tolist() if not dados.empty else []
+            familiaProduto = st.selectbox("Selecione a família do insumo dos tipos já registrados ou ESCREVA UMA NOVA", 
+                                         opcoes_familia, accept_new_options=True)
 
             fornecedorProduto = st.text_input("Informe o fornecedor do insumo", max_chars= 50)
 
@@ -190,12 +192,16 @@ if dados.empty:
 
             nomeProduto = st.text_input("Informe o nome do semiacabado/acabado", max_chars= 50)
 
-            familiaProduto = st.selectbox("Selecione a família do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Família"].unique(), accept_new_options=True)
+            opcoes_familia = dados["Família"].unique().tolist() if not dados.empty else []
+            opcoes_categoria = dados["Categoria"].unique().tolist() if not dados.empty else []
+            opcoes_tamanho = dados["Tamanho"].unique().tolist() if not dados.empty else []
 
-            categoriaProduto = st.selectbox("Selecione a categoria do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Categoria"].unique(), accept_new_options=True)
-
-            tamanhoProduto = st.selectbox("Selecione o tamanho do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Tamanho"].unique(), accept_new_options=True)
-
+            familiaProduto = st.selectbox("Selecione a família do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", 
+                                         opcoes_familia, accept_new_options=True)
+            categoriaProduto = st.selectbox("Selecione a categoria do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", 
+                                           opcoes_categoria, accept_new_options=True)
+            tamanhoProduto = st.selectbox("Selecione o tamanho do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", 
+                                         opcoes_tamanho, accept_new_options=True)
             fornecedorProduto = " - "
 
             contatoFornecedor = " - "
