@@ -1015,12 +1015,15 @@ elif selected == "Cadastro de Produtos":
     # Verifica se o DataFrame existe E tem dados
     if dados is not None and len(dados) > 0:
         ultima_linha = dados.index[-1] + 3
+        codigos = dados["Código"].astype(str).unique().tolist()
+        
     else:
         ultima_linha = 2  # primeira linha de dados
+        codigos = []
 
     if insumoOrSemiacabado ==  "Insumo":
         with st.form("meu_formulario"):
-            codigoProduto = st.text_input("Informe o código do insumo", max_chars= 50)
+            codigoProduto = st.text_input("Informe o código do insumo (diferente dos já registrados)", max_chars= 50)
 
             nomeProduto = st.text_input("Informe o nome do insumo", max_chars= 50)
 
@@ -1047,33 +1050,36 @@ elif selected == "Cadastro de Produtos":
             
             # Só executa quando o botão for clicado
             if submitted:
-                # Criar a lista de valores para a linha inteira
-                valores_linha = [
-                    codigoProduto,
-                    nomeProduto,
-                    familiaProduto,
-                    "-",
-                    "-",
-                    fornecedorProduto,
-                    contatoFornecedor,
-                    localizacaoEstoque,
-                    unidadeProduto,
-                    quantidadeProduto,  # Convertendo para int como no exemplo original
-                    esProduto,
-                    loteminimoProduto,
-                    observacaoProduto
-                ]
+                if codigoProduto in codigos:
+                    st.error("Código já existente! Escolha um código diferente.")
+                else:
+                    # Criar a lista de valores para a linha inteira
+                    valores_linha = [
+                        codigoProduto,
+                        nomeProduto,
+                        familiaProduto,
+                        "-",
+                        "-",
+                        fornecedorProduto,
+                        contatoFornecedor,
+                        localizacaoEstoque,
+                        unidadeProduto,
+                        quantidadeProduto,  # Convertendo para int como no exemplo original
+                        esProduto,
+                        loteminimoProduto,
+                        observacaoProduto
+                    ]
 
-                # Fazer o batch update
-                planilhaEstoque.batch_update([{
-                    'range': f'A{ultima_linha}:M{ultima_linha}',  # Colunas A até J (1 a 10)
-                    'values': [valores_linha]
-                }])
-                
+                    # Fazer o batch update
+                    planilhaEstoque.batch_update([{
+                        'range': f'A{ultima_linha}:M{ultima_linha}',  # Colunas A até J (1 a 10)
+                        'values': [valores_linha]
+                    }])
+                    
 
-                status()
+                    status()
 
-                st.toast("Insumo adicionado com sucesso!", icon="🎉")
+                    st.toast("Insumo adicionado com sucesso!", icon="🎉")
 
 
     elif insumoOrSemiacabado ==  "semiacabado/acabado":
