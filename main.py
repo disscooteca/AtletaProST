@@ -867,7 +867,7 @@ elif selected == "Cadastro de Produtos":
 
     st.write("- - -")
 
-    insumoOrSemiacabado = st.pills("Deseja registrar Insumo ou Semiacabado", ["Insumo", "Semiacabado"])
+    insumoOrSemiacabado = st.pills("Deseja registrar Insumo ou semiacabado/acabado", ["Insumo", "semiacabado/acabado"])
 
     # Verifica se o DataFrame existe E tem dados
     if dados is not None and len(dados) > 0:
@@ -933,29 +933,29 @@ elif selected == "Cadastro de Produtos":
                 st.toast("Insumo adicionado com sucesso!", icon="🎉")
 
 
-    elif insumoOrSemiacabado ==  "Semiacabado":
+    elif insumoOrSemiacabado ==  "semiacabado/acabado":
         with st.form("meu_formulario"):
-            codigoProduto = st.text_input("Informe o código do semiacabado", max_chars= 50)
+            codigoProduto = st.text_input("Informe o código do semiacabado/acabado", max_chars= 50)
 
-            nomeProduto = st.text_input("Informe o nome do semiacabado", max_chars= 50)
+            nomeProduto = st.text_input("Informe o nome do semiacabado/acabado", max_chars= 50)
 
-            familiaProduto = st.selectbox("Selecione a família do semiacabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Família"].unique(), accept_new_options=True)
+            familiaProduto = st.selectbox("Selecione a família do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Família"].unique(), accept_new_options=True)
 
-            categoriaProduto = st.selectbox("Selecione a categoria do semiacabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Categoria"].unique(), accept_new_options=True)
+            categoriaProduto = st.selectbox("Selecione a categoria do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Categoria"].unique(), accept_new_options=True)
 
-            tamanhoProduto = st.selectbox("Selecione o tamanho do semiacabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Tamanho"].unique(), accept_new_options=True)
+            tamanhoProduto = st.selectbox("Selecione o tamanho do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Tamanho"].unique(), accept_new_options=True)
 
             fornecedorProduto = " - "
 
             contatoFornecedor = " - "
 
-            localizacaoEstoque = st.text_input("Informe a localização do semiacabado no estoque", max_chars= 50)
+            localizacaoEstoque = st.text_input("Informe a localização do semiacabado/acabado no estoque", max_chars= 50)
 
-            unidadeProduto = st.text_input("Informe o tipo de unidade do semiacabado", max_chars= 50)
+            unidadeProduto = st.text_input("Informe o tipo de unidade do semiacabado/acabado", max_chars= 50)
 
-            quantidadeProduto = st.number_input("Informe a quantidade do semiacabado de acordo com a unidade registrada", step=1)
+            quantidadeProduto = st.number_input("Informe a quantidade do semiacabado/acabado de acordo com a unidade registrada", step=1)
 
-            esProduto = " - "
+            esProduto = st.number_input("Informe a quantidade de estoque de segurança para o semiacabado/acabado na unidade registrada", step=1)
 
             loteminimoProduto = " - "
 
@@ -997,7 +997,7 @@ elif selected == "Cadastro de Produtos":
 
                 status()
 
-                st.toast("Semiacabado adicionado com sucesso!", icon="🎉")
+                st.toast("semiacabado/acabado adicionado com sucesso!", icon="🎉")
 
 elif selected == "Ordem de Compra":
     st.title("Abrir Ordem de Compra")
