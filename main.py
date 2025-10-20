@@ -112,10 +112,79 @@ planilhaEstoque = planilha_completa.get_worksheet(0)
 dados_estoque = planilhaEstoque.get_all_records() 
 
 dados = pd.DataFrame(dados_estoque)
-dados["Código"] = dados["Código"].astype(str)
+
 
 if dados.empty:
     st.header("Dados vazios, registre produtos")
+    st.title("Cadastro de Produtos")
+
+    st.write("- - -")
+
+    insumoOrSemiacabado = st.pills("Deseja registrar Insumo ou semiacabado/acabado", ["Insumo", "semiacabado/acabado"])
+
+    # Verifica se o DataFrame existe E tem dados
+    if dados is not None and len(dados) > 0:
+        ultima_linha = dados.index[-1] + 3
+    else:
+        ultima_linha = 2  # primeira linha de dados
+
+    if insumoOrSemiacabado ==  "Insumo":
+        with st.form("meu_formulario"):
+            codigoProduto = st.text_input("Informe o código do insumo", max_chars= 50)
+
+            nomeProduto = st.text_input("Informe o nome do insumo", max_chars= 50)
+
+            familiaProduto = st.selectbox("Selecione a família do insumo dos tipos já registrados ou ESCREVA UMA NOVA", dados["Família"].unique(), accept_new_options=True)
+
+            fornecedorProduto = st.text_input("Informe o fornecedor do insumo", max_chars= 50)
+
+            contatoFornecedor = st.text_input("Informe o contato do fornecedor do insumo", max_chars= 50)
+
+            localizacaoEstoque = st.text_input("Informe a localização do insumo no estoque", max_chars= 50)
+
+            unidadeProduto = st.text_input("Informe o tipo de unidade do insumo", max_chars= 50)
+
+            quantidadeProduto = st.number_input("Informe a quantidade do insumo de acordo com a unidade registrada", step=1)
+
+            esProduto = st.number_input("Informe a quantidade de estoque de segurança para o insumo na unidade registrada", step=1)
+
+            loteminimoProduto = st.number_input("Informe o lote mínimo em unidades registradas", step=1)
+
+            observacaoProduto = st.text_input("Observações:", max_chars= 70)
+            
+            # Botão de submit dentro do form
+            submitted = st.form_submit_button("Submeter")
+            
+            # Só executa quando o botão for clicado
+            if submitted:
+                # Criar a lista de valores para a linha inteira
+                valores_linha = [
+                    codigoProduto,
+                    nomeProduto,
+                    familiaProduto,
+                    "-",
+                    "-",
+                    fornecedorProduto,
+                    contatoFornecedor,
+                    localizacaoEstoque,
+                    unidadeProduto,
+                    quantidadeProduto,  # Convertendo para int como no exemplo original
+                    esProduto,
+                    loteminimoProduto,
+                    observacaoProduto
+                ]
+
+                # Fazer o batch update
+                planilhaEstoque.batch_update([{
+                    'range': f'A{ultima_linha}:M{ultima_linha}',  # Colunas A até J (1 a 10)
+                    'values': [valores_linha]
+                }])
+
+                st.toast("Insumo adicionado com sucesso!", icon="🎉")
+            
+            st.stop()
+
+dados["Código"] = dados["Código"].astype(str)
     
 #Função de Status do estoque ("Atenção" caso abaixo)
 def status():
