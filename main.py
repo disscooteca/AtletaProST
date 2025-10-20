@@ -182,6 +182,8 @@ if dados.empty:
 
                 st.toast("Insumo adicionado com sucesso!", icon="🎉")
 
+                st.stop()
+
     elif insumoOrSemiacabado ==  "semiacabado/acabado":
         with st.form("meu_formulario"):
             codigoProduto = st.text_input("Informe o código do semiacabado/acabado", max_chars= 50)
@@ -245,6 +247,8 @@ if dados.empty:
                 }])
 
                 st.toast("semiacabado/acabado adicionado com sucesso!", icon="🎉")
+
+                st.stop()
 
     st.stop()
 
