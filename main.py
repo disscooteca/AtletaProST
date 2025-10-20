@@ -181,8 +181,72 @@ if dados.empty:
                 }])
 
                 st.toast("Insumo adicionado com sucesso!", icon="🎉")
+
+    elif insumoOrSemiacabado ==  "semiacabado/acabado":
+        with st.form("meu_formulario"):
+            codigoProduto = st.text_input("Informe o código do semiacabado/acabado", max_chars= 50)
+
+            nomeProduto = st.text_input("Informe o nome do semiacabado/acabado", max_chars= 50)
+
+            familiaProduto = st.selectbox("Selecione a família do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Família"].unique(), accept_new_options=True)
+
+            categoriaProduto = st.selectbox("Selecione a categoria do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Categoria"].unique(), accept_new_options=True)
+
+            tamanhoProduto = st.selectbox("Selecione o tamanho do semiacabado/acabado dos tipos já registrados ou ESCREVA UM NOVO TIPO", dados["Tamanho"].unique(), accept_new_options=True)
+
+            fornecedorProduto = " - "
+
+            contatoFornecedor = " - "
+
+            localizacaoEstoque = st.text_input("Informe a localização do semiacabado/acabado no estoque", max_chars= 50)
+
+            unidadeProduto = st.text_input("Informe o tipo de unidade do semiacabado/acabado", max_chars= 50)
+
+            quantidadeProduto = st.number_input("Informe a quantidade do semiacabado/acabado de acordo com a unidade registrada", step=1)
+
+            esProduto = st.number_input("Informe a quantidade de estoque de segurança para o semiacabado/acabado na unidade registrada", step=1)
+
+            loteminimoProduto = " - "
+
+            observacaoProduto = st.text_input("Observações:", max_chars= 70)
+
+            statusProduto = "NA"
+
+            po = "NA"
             
-            st.stop()
+            # Botão de submit dentro do form
+            submitted = st.form_submit_button("Submeter")
+            
+            # Só executa quando o botão for clicado
+            if submitted:
+                # Criar a lista de valores para a linha inteira
+                valores_linha = [
+                    codigoProduto,
+                    nomeProduto,
+                    familiaProduto,
+                    categoriaProduto,
+                    tamanhoProduto,
+                    fornecedorProduto,
+                    contatoFornecedor,
+                    localizacaoEstoque,
+                    unidadeProduto,
+                    quantidadeProduto,  # Convertendo para int como no exemplo original
+                    esProduto,
+                    loteminimoProduto,
+                    observacaoProduto,
+                    statusProduto,
+                    po
+                ]
+
+                # Fazer o batch update
+                planilhaEstoque.batch_update([{
+                    'range': f'A{ultima_linha}:O{ultima_linha}',  # Colunas A até J (1 a 10)
+                    'values': [valores_linha]
+                }])
+
+                st.toast("semiacabado/acabado adicionado com sucesso!", icon="🎉")
+
+    st.stop()
 
 dados["Código"] = dados["Código"].astype(str)
     
